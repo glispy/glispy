@@ -1,7 +1,5 @@
 package glisp
 
-import "github.com/missionMeteora/journaler"
-
 // List represents a list of Atom's
 type List []Atom
 
@@ -27,7 +25,6 @@ func NewList(ts *Tokens) (l List, err error) {
 			return
 		}
 
-		journaler.Debug("Appending exp: %v", e)
 		l = append(l, e)
 	}
 }
