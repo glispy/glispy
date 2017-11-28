@@ -1,8 +1,6 @@
 package glisp
 
 import (
-	"fmt"
-
 	"github.com/missionMeteora/toolkit/errors"
 )
 
@@ -11,7 +9,10 @@ const ErrInvalidAtom = errors.Error("atom must be a number or a string")
 
 // NewAtom will return a new atom (Number, string, or symbol)
 func NewAtom(t Token) (a Atom, err error) {
-	fmt.Println("New atom: " + t)
+	if a, err = NewSymbol(t); err == nil {
+		return
+	}
+
 	if a, err = NewNumber(t); err == nil {
 		return
 	}

@@ -2,7 +2,8 @@ package glisp
 
 // NewTokens will return a new set of tokens
 func NewTokens(program string) Tokens {
-	return toTokens(splitSpaces(expand(program)))
+	tks := toTokens(splitSpaces(expand(program)))
+	return tks
 }
 
 // Tokens represents a list of tokens

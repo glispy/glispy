@@ -1,30 +1,33 @@
 package glisp
 
+import "github.com/missionMeteora/journaler"
+
 // List represents a list of Atom's
 type List []Atom
 
 // NewList will return a new list
-func NewList(ts Tokens) (l List, err error) {
+func NewList(ts *Tokens) (l List, err error) {
 	var (
-		tkn Token
-		ok  bool
+		token Token
+		ok    bool
 	)
 
 	for {
-		if tkn, ok = ts.Shift(); !ok {
+		if token, ok = ts.Shift(); !ok {
 			err = ErrUnexpectedEOF
 			return
 		}
 
-		if tkn == ")" {
+		if token == ")" {
 			return
 		}
 
 		var e Expression
-		if e, err = NewExpression(ts); err != nil {
+		if e, err = toExpression(ts, token); err != nil {
 			return
 		}
 
+		journaler.Debug("Appending exp: %v", e)
 		l = append(l, e)
 	}
 }
