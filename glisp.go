@@ -1,7 +1,6 @@
 package glisp
 
 import (
-	"github.com/missionMeteora/journaler"
 	"github.com/missionMeteora/toolkit/errors"
 )
 
@@ -65,8 +64,6 @@ func (g *Glisp) addNumbers(args List) (out Expression, err error) {
 
 	out = 0
 
-	journaler.Debug("Adding numbers: %v", args)
-
 	for _, exp := range args {
 		switch val := exp.(type) {
 		case Number:
@@ -77,7 +74,6 @@ func (g *Glisp) addNumbers(args List) (out Expression, err error) {
 				return
 			}
 
-			journaler.Debug("Our expression! %v", exp)
 			if num, ok = exp.(Number); !ok {
 				err = ErrExpectedNumber
 				return
@@ -86,7 +82,6 @@ func (g *Glisp) addNumbers(args List) (out Expression, err error) {
 			n += num
 
 		default:
-			journaler.Debug("The fuck man? %v", exp)
 			err = ErrExpectedNumber
 			return
 		}
@@ -144,7 +139,7 @@ func (g *Glisp) Eval(e Expression) (out Expression, err error) {
 		return g.handleSymbol(string(val))
 
 	case Number:
-		journaler.Debug("Number: %v", val)
+		//		journaler.Debug("Number: %v", val)
 
 	case List:
 		return g.handleList(val)
