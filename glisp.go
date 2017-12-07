@@ -1,7 +1,9 @@
 package glisp
 
 import (
+	"github.com/missionMeteora/journaler"
 	"github.com/missionMeteora/toolkit/errors"
+	"math"
 )
 
 const (
@@ -21,15 +23,22 @@ const (
 	ErrExpectedString = errors.Error("expected string")
 	// ErrCannotAdd is returned when the provided type cannot be added
 	ErrCannotAdd = errors.Error("cannot add the provided type")
+	// ErrInvalidArgs is returned when there are the invalid number of arguments
+	ErrInvalidArgs = errors.Error("invalid arguments")
+	// ErrExpectedExpression is returned when an expression is expected
+	ErrExpectedExpression = errors.Error("expected expression")
 )
 
 // NewGlisp will return a new instance of Glisp
 func NewGlisp() (g Glisp) {
 	g.env = make(Dict)
-	g.setEnvFn("println", println)
+	g.setEnvFn("println", g.println)
 	g.setEnvFn("+", g.add)
-
+	g.setEnvFn("*", g.multiply)
+	g.setEnvFn("define", g.define)
+	g.setEnvFn("begin", g.begin)
 	g.env["greeting"] = "Hello world"
+	g.env["pi"] = Number(math.Pi)
 	return
 }
 
@@ -39,7 +48,19 @@ type Glisp struct {
 }
 
 func (g *Glisp) setEnvFn(key string, fn Fn) {
-	g.env[key] = fn
+	g.env[Symbol(key)] = fn
+}
+
+func (g *Glisp) println(args List) (exp Expression, err error) {
+	vals := make([]interface{}, len(args))
+	for i, v := range args {
+		if vals[i], err = g.Eval(v); err != nil {
+			return
+		}
+	}
+
+	journaler.Notification("Glisp: %v", vals)
+	return
 }
 
 func (g *Glisp) add(args List) (exp Expression, err error) {
@@ -112,35 +133,113 @@ func (g *Glisp) addStrings(args List) (out Expression, err error) {
 	return
 }
 
+func (g *Glisp) getNumber(exp Expression) (n Number, err error) {
+	switch val := exp.(type) {
+	case Number:
+		n = val
+	case Symbol:
+		if exp, err = g.Eval(val); err != nil {
+			return
+		}
+
+		return g.getNumber(exp)
+
+	case List:
+		if exp, err = g.Eval(val); err != nil {
+			return
+		}
+
+		return g.getNumber(exp)
+
+	default:
+		journaler.Debug("Uhh: %v", exp)
+		err = ErrExpectedNumber
+	}
+
+	return
+}
+
+func (g *Glisp) multiply(args List) (out Expression, err error) {
+	var (
+		n   Number
+		num Number
+	)
+
+	for i, exp := range args {
+		if num, err = g.getNumber(exp); err != nil {
+			return
+		}
+
+		if i == 0 {
+			n = num
+		} else {
+			n *= num
+		}
+	}
+
+	out = n
+	return
+}
+
+// define never returns a value
+func (g *Glisp) define(args List) (_ Expression, err error) {
+	var (
+		sym Symbol
+		exp Expression
+		ok  bool
+	)
+
+	if len(args) < 2 {
+		err = ErrInvalidArgs
+		return
+	}
+
+	if sym, ok = args[0].(Symbol); !ok {
+		err = ErrExpectedSymbol
+		return
+	}
+
+	if exp, ok = args[1].(Expression); !ok {
+		err = ErrExpectedExpression
+		return
+	}
+
+	if exp, err = g.Eval(exp); err != nil {
+		return
+	}
+
+	g.env[sym] = exp
+	return
+}
+
+func (g *Glisp) begin(args List) (_ Expression, err error) {
+	for _, arg := range args {
+		if _, err = g.Eval(arg); err != nil {
+			return
+		}
+	}
+
+	return
+}
+
 /*
-def eval(x: Exp, env=global_env) -> Exp:
-    "Evaluate an expression in an environment."
-    if isinstance(x, Symbol):        # variable reference
-        return env[x]
-    elif not isinstance(x, Number):  # constant number
-        return x
-    elif x[0] == 'if':               # conditional
-        (_, test, conseq, alt) = x
-        exp = (conseq if eval(test, env) else alt)
-        return eval(exp, env)
-    elif x[0] == 'define':           # definition
-        (_, symbol, exp) = x
-        env[symbol] = eval(exp, env)
-    else:                            # procedure call
-        proc = eval(x[0], env)
-        args = [eval(arg, env) for arg in x[1:]]
-        return proc(*args)
+
+   elif x[0] == 'if':               # conditional
+       (_, test, conseq, alt) = x
+       exp = (conseq if eval(test, env) else alt)
+       return eval(exp, env)
+   else:                            # procedure call
 */
 
 // Eval will evaluate an Expression
 func (g *Glisp) Eval(e Expression) (out Expression, err error) {
 	switch val := e.(type) {
-	case Symbol:
-		return g.handleSymbol(string(val))
-
 	case Number:
-		//		journaler.Debug("Number: %v", val)
-
+		out = val
+	case String:
+		out = val
+	case Symbol:
+		return g.handleSymbol(val)
 	case List:
 		return g.handleList(val)
 	}
@@ -148,9 +247,9 @@ func (g *Glisp) Eval(e Expression) (out Expression, err error) {
 	return
 }
 
-func (g *Glisp) handleSymbol(key string) (out Expression, err error) {
+func (g *Glisp) handleSymbol(s Symbol) (out Expression, err error) {
 	var ok bool
-	if out, ok = g.env[key]; !ok {
+	if out, ok = g.env[s]; !ok {
 		err = ErrKeyNotFound
 	}
 
@@ -158,6 +257,30 @@ func (g *Glisp) handleSymbol(key string) (out Expression, err error) {
 }
 
 func (g *Glisp) handleList(l List) (out Expression, err error) {
+	tkn := l[0]
+	switch tkn {
+	case "if":
+		journaler.Debug("IF it? %v", l)
+		/*
+			(_, test, conseq, alt) = x
+			exp = (conseq if eval(test, env) else alt)
+			return eval(exp, env)
+		*/
+
+		// Define should be able to be set in the env..
+	//case "define":
+	/*
+		(_, symbol, exp) = x
+		env[symbol] = eval(exp, env)
+	*/
+	default:
+		return g.handleFn(l)
+	}
+
+	return
+}
+
+func (g *Glisp) handleFn(l List) (out Expression, err error) {
 	var (
 		sym  Symbol
 		ref  Expression
@@ -167,11 +290,12 @@ func (g *Glisp) handleList(l List) (out Expression, err error) {
 	)
 
 	if sym, ok = l[0].(Symbol); !ok {
+		journaler.Debug("Oh yes? %v", l)
 		err = ErrExpectedSymbol
 		return
 	}
 
-	if ref, ok = g.env[string(sym)]; !ok {
+	if ref, ok = g.env[sym]; !ok {
 		err = ErrKeyNotFound
 		return
 	}
@@ -186,4 +310,4 @@ func (g *Glisp) handleList(l List) (out Expression, err error) {
 }
 
 // Dict represents a dictionary type
-type Dict map[string]Expression
+type Dict map[Symbol]Expression

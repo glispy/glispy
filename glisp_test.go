@@ -8,7 +8,9 @@ import (
 )
 
 const (
-	program = "(begin (define r 10) (* pi (* r r)))"
+	//	program = "(begin (define r 10) (* pi (* r r)))"
+
+	program = "(begin (define r 10) (println (* pi (* r r)))))"
 )
 
 var (
@@ -18,7 +20,9 @@ var (
 
 func TestGlisp(t *testing.T) {
 	g := NewGlisp()
-	tkns := NewTokens(`(+ 1 3 (+ 2 5))`)
+	//tkns := NewTokens(`(begin (define foo "bar") (println foo pi))`)
+	tkns := NewTokens(program)
+	//tkns := NewTokens(`(begin (println ("foo")) (println ("bar")))`)
 
 	exp, err := NewExpression(&tkns)
 	if err != nil {
