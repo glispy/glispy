@@ -1,12 +1,14 @@
 package glisp
 
+import "github.com/itsmontoya/glisp/tokens"
+
 // List represents a list of Atom's
 type List []Atom
 
 // NewList will return a new list
-func NewList(ts *Tokens) (l List, err error) {
+func NewList(ts *tokens.Tokens) (l List, err error) {
 	var (
-		token Token
+		token tokens.Token
 		ok    bool
 	)
 

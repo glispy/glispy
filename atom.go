@@ -1,6 +1,7 @@
 package glisp
 
 import (
+	"github.com/itsmontoya/glisp/tokens"
 	"github.com/missionMeteora/toolkit/errors"
 )
 
@@ -8,7 +9,7 @@ import (
 const ErrInvalidAtom = errors.Error("atom must be a number or a string")
 
 // NewAtom will return a new atom (Number, string, or symbol)
-func NewAtom(t Token) (a Atom, err error) {
+func NewAtom(t tokens.Token) (a Atom, err error) {
 	if a, err = NewSymbol(t); err == nil {
 		return
 	}

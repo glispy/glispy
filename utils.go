@@ -1,32 +1,11 @@
 package glisp
 
 import (
-	"regexp"
-	"strings"
-
+	"github.com/itsmontoya/glisp/tokens"
 	"github.com/missionMeteora/journaler"
 )
 
-var splitRegExp = regexp.MustCompile(`[^\s"']+|"([^"]*)"|'([^']*)'`)
-
-func expand(program string) string {
-	program = strings.Replace(program, "(", " ( ", -1)
-	return strings.Replace(program, ")", " ) ", -1)
-}
-
-func splitSpaces(program string) []string {
-	return splitRegExp.FindAllString(program, -1)
-}
-
-func toTokens(split []string) (ts Tokens) {
-	for _, str := range split {
-		ts.Push(str)
-	}
-
-	return
-}
-
-func toExpression(ts *Tokens, token Token) (e Expression, err error) {
+func toExpression(ts *tokens.Tokens, token tokens.Token) (e Expression, err error) {
 	switch token {
 	case "(":
 		return NewList(ts)

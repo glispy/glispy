@@ -3,6 +3,7 @@ package glisp
 import (
 	"strconv"
 
+	"github.com/itsmontoya/glisp/tokens"
 	"github.com/missionMeteora/toolkit/errors"
 )
 
@@ -10,7 +11,7 @@ import (
 const ErrInvalidNumber = errors.Error("invalid number")
 
 // NewNumber will return a new number
-func NewNumber(t Token) (n Number, err error) {
+func NewNumber(t tokens.Token) (n Number, err error) {
 	var float float64
 	if float, err = strconv.ParseFloat(string(t), 32); err != nil {
 		return

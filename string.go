@@ -1,12 +1,15 @@
 package glisp
 
-import "github.com/missionMeteora/toolkit/errors"
+import (
+	"github.com/itsmontoya/glisp/tokens"
+	"github.com/missionMeteora/toolkit/errors"
+)
 
 // ErrInvalidString is returned when a string is invalid
 const ErrInvalidString = errors.Error("invalid string")
 
 // NewString will return a new string
-func NewString(t Token) (s String, err error) {
+func NewString(t tokens.Token) (s String, err error) {
 	if t[0] != '"' {
 		err = ErrInvalidString
 		return

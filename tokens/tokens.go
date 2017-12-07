@@ -1,6 +1,5 @@
-package glisp
+package tokens
 
-/*
 // NewTokens will return a new set of tokens
 func NewTokens(program string) Tokens {
 	tks := toTokens(splitSpaces(expand(program)))
@@ -36,4 +35,3 @@ func (ts *Tokens) Push(str string) {
 
 // Token is a basic token type
 type Token string
-*/
