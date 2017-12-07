@@ -21,7 +21,12 @@ var (
 func TestGlisp(t *testing.T) {
 	g := NewGlisp()
 	//tkns := NewTokens(`(begin (define foo "bar") (println foo pi))`)
-	tkns := NewTokens(program)
+	//tkns := NewTokens(`(if (> 3 4) 11 22)`)
+	tkns := NewTokens(`(begin
+	(defun square (x)
+		(* x x))
+	(println (square 2))
+)`)
 	//tkns := NewTokens(`(begin (println ("foo")) (println ("bar")))`)
 
 	exp, err := NewExpression(&tkns)
