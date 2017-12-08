@@ -1,4 +1,4 @@
-package glisp
+package types
 
 import (
 	"github.com/itsmontoya/glisp/tokens"

@@ -1,6 +1,9 @@
-package glisp
+package types
 
-import "github.com/itsmontoya/glisp/tokens"
+import (
+	"github.com/itsmontoya/glisp/common"
+	"github.com/itsmontoya/glisp/tokens"
+)
 
 // List represents a list of Atom's
 type List []Atom
@@ -14,7 +17,7 @@ func NewList(ts *tokens.Tokens) (l List, err error) {
 
 	for {
 		if token, ok = ts.Shift(); !ok {
-			err = ErrUnexpectedEOF
+			err = common.ErrUnexpectedEOF
 			return
 		}
 

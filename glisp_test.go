@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/itsmontoya/glisp/tokens"
+	"github.com/itsmontoya/glisp/types"
 	"github.com/janne/go-lisp/lisp"
 )
 
@@ -14,22 +16,22 @@ const (
 )
 
 var (
-	glispSink  Expression
+	glispSink  types.Expression
 	goLispSink lisp.Value
 )
 
 func TestGlisp(t *testing.T) {
 	g := NewGlisp()
 	//tkns := NewTokens(`(begin (define foo "bar") (println foo pi))`)
-	//tkns := NewTokens(`(if (> 3 4) 11 22)`)
-	tkns := NewTokens(`(begin
-	(defun square (x)
-		(* x x))
-	(println (square 2))
-)`)
+	//tkns := tokens.NewTokens(`(if (> 3 2) 11 22)`)
+	tkns := tokens.NewTokens(`(begin
+		(defun square (x)
+			(* x x))
+		(println (square 2))
+	)`)
 	//tkns := NewTokens(`(begin (println ("foo")) (println ("bar")))`)
 
-	exp, err := NewExpression(&tkns)
+	exp, err := types.NewExpression(&tkns)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -44,16 +46,16 @@ func TestGlisp(t *testing.T) {
 
 func BenchmarkGlispAdd(b *testing.B) {
 	var (
-		exp Expression
-		val Expression
+		exp types.Expression
+		val types.Expression
 		err error
 	)
 
 	g := NewGlisp()
 
 	for i := 0; i < b.N; i++ {
-		tkns := NewTokens(`(+ 1 3 (+ 2 5))`)
-		if exp, err = NewExpression(&tkns); err != nil {
+		tkns := tokens.NewTokens(`(+ 1 3 (+ 2 5))`)
+		if exp, err = types.NewExpression(&tkns); err != nil {
 			b.Fatal(err)
 		}
 
@@ -61,7 +63,7 @@ func BenchmarkGlispAdd(b *testing.B) {
 			b.Fatal(err)
 		}
 
-		if val.(Number) != 11 {
+		if val.(types.Number) != 11 {
 			b.Fatalf("invalid value, expected %v and received %v", 11, val)
 		}
 
@@ -73,15 +75,15 @@ func BenchmarkGlispAdd(b *testing.B) {
 
 func BenchmarkGlispAdd_PreProcessed(b *testing.B) {
 	var (
-		exp Expression
-		val Expression
+		exp types.Expression
+		val types.Expression
 		err error
 	)
 
 	g := NewGlisp()
-	tkns := NewTokens(`(+ 1 3 (+ 2 5))`)
+	tkns := tokens.NewTokens(`(+ 1 3 (+ 2 5))`)
 
-	if exp, err = NewExpression(&tkns); err != nil {
+	if exp, err = types.NewExpression(&tkns); err != nil {
 		b.Fatal(err)
 	}
 
@@ -90,7 +92,7 @@ func BenchmarkGlispAdd_PreProcessed(b *testing.B) {
 			b.Fatal(err)
 		}
 
-		if val.(Number) != 11 {
+		if val.(types.Number) != 11 {
 			b.Fatalf("invalid value, expected %v and received %v", 11, val)
 		}
 
