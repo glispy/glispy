@@ -13,6 +13,7 @@ const (
 	//	program = "(begin (define r 10) (* pi (* r r)))"
 
 	program = "(begin (define r 10) (println (* pi (* r r)))))"
+	square  = `(define square (x) (* x x))`
 )
 
 var (
@@ -24,11 +25,18 @@ func TestGlisp(t *testing.T) {
 	g := NewGlisp()
 	//tkns := NewTokens(`(begin (define foo "bar") (println foo pi))`)
 	//tkns := tokens.NewTokens(`(if (> 3 2) 11 22)`)
-	tkns := tokens.NewTokens(`(begin
+	tkns := tokens.NewTokens(`(
+	begin 
 		(defun square (x)
-			(* x x))
-		(println (square 2))
-	)`)
+			(* x x)
+		)
+		(println (
+				square (
+					+ 3 3
+				)
+			)
+		)
+)`)
 	//tkns := NewTokens(`(begin (println ("foo")) (println ("bar")))`)
 
 	exp, err := types.NewExpression(&tkns)
@@ -42,6 +50,7 @@ func TestGlisp(t *testing.T) {
 	}
 
 	fmt.Println(out)
+
 }
 
 func BenchmarkGlispAdd(b *testing.B) {
@@ -64,6 +73,86 @@ func BenchmarkGlispAdd(b *testing.B) {
 		}
 
 		if val.(types.Number) != 11 {
+			b.Fatalf("invalid value, expected %v and received %v", 11, val)
+		}
+
+		glispSink = val
+	}
+
+	b.ReportAllocs()
+}
+
+func BenchmarkGlispSquare(b *testing.B) {
+	var (
+		exp  types.Expression
+		val  types.Expression
+		tkns tokens.Tokens
+		err  error
+	)
+
+	g := NewGlisp()
+	tkns = tokens.NewTokens(square)
+	if exp, err = types.NewExpression(&tkns); err != nil {
+		b.Fatal(err)
+	}
+
+	if _, err = g.Eval(exp); err != nil {
+		b.Fatal(err)
+	}
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		tkns = tokens.NewTokens(`(square 3)`)
+		if exp, err = types.NewExpression(&tkns); err != nil {
+			b.Fatal(err)
+		}
+
+		if val, err = g.Eval(exp); err != nil {
+			b.Fatal(err)
+		}
+
+		if val.(types.Number) != 9 {
+			b.Fatalf("invalid value, expected %v and received %v", 11, val)
+		}
+
+		glispSink = val
+	}
+
+	b.ReportAllocs()
+}
+
+func BenchmarkGlispSquare_PreProcessed(b *testing.B) {
+	var (
+		exp  types.Expression
+		val  types.Expression
+		tkns tokens.Tokens
+		err  error
+	)
+
+	g := NewGlisp()
+	tkns = tokens.NewTokens(square)
+	if exp, err = types.NewExpression(&tkns); err != nil {
+		b.Fatal(err)
+	}
+
+	if _, err = g.Eval(exp); err != nil {
+		b.Fatal(err)
+	}
+
+	tkns = tokens.NewTokens(`(square 3)`)
+	if exp, err = types.NewExpression(&tkns); err != nil {
+		b.Fatal(err)
+	}
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		if val, err = g.Eval(exp); err != nil {
+			b.Fatal(err)
+		}
+
+		if val.(types.Number) != 9 {
 			b.Fatalf("invalid value, expected %v and received %v", 11, val)
 		}
 
@@ -113,6 +202,32 @@ func BenchmarkGoLispAdd(b *testing.B) {
 		}
 
 		if val.Number() != 11 {
+			b.Fatalf("invalid value, expected %v and received %v", 11, val)
+		}
+
+		goLispSink = val
+	}
+
+	b.ReportAllocs()
+}
+
+func BenchmarkGoLisp(b *testing.B) {
+	var (
+		val lisp.Value
+		err error
+	)
+
+	if val, err = lisp.EvalString(square); err != nil {
+		b.Fatal(err)
+	}
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		if val, err = lisp.EvalString(`(square 3)`); err != nil {
+			b.Fatal(err)
+		}
+
+		if val.Number() != 9 {
 			b.Fatalf("invalid value, expected %v and received %v", 11, val)
 		}
 

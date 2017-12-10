@@ -1,8 +1,6 @@
 package core
 
 import (
-	"fmt"
-
 	gmath "github.com/itsmontoya/glisp/stdlib/math"
 	gstrings "github.com/itsmontoya/glisp/stdlib/strings"
 
@@ -14,14 +12,13 @@ import (
 )
 
 // Println will print a line to stdout
-func Println(sc scope.Scope, args types.List) (exp types.Expression, err error) {
-	journaler.Debug("Println called")
-	vals := make([]interface{}, len(args))
-	for i, v := range args {
-		vals[i] = v
+func Println(sc scope.Scope, args types.List) (_ types.Expression, err error) {
+	var exp types.Expression
+	if exp, err = utils.Eval(sc, args[0]); err != nil {
+		return
 	}
 
-	journaler.Notification("Glisp: %v", vals...)
+	journaler.Notification("Glisp: %v", exp)
 	return
 }
 
@@ -113,8 +110,6 @@ func Defun(sc scope.Scope, args types.List) (_ types.Expression, err error) {
 		ok    bool
 	)
 
-	journaler.Debug("Defun! %v", args)
-
 	if len(args) < 3 {
 		err = common.ErrInvalidArgs
 		return
@@ -157,9 +152,7 @@ func Defun(sc scope.Scope, args types.List) (_ types.Expression, err error) {
 				fsc.Put(sym, arg)
 			}
 
-			fmt.Print("\n\n\n\n\n\n\n\n\n")
-			journaler.Debug("Being called! %v", fsc)
-			if exp, err = utils.Eval(fsc, exp); err != nil {
+			if out, err = utils.Eval(fsc, exp); err != nil {
 				return
 			}
 

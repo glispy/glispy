@@ -4,14 +4,12 @@ import (
 	"github.com/itsmontoya/glisp/common"
 	"github.com/itsmontoya/glisp/scope"
 	"github.com/itsmontoya/glisp/types"
-	"github.com/missionMeteora/journaler"
 )
 
 const ifSymbol = types.Symbol("if")
 
 // Eval will evaluate an Expression
 func Eval(sc scope.Scope, e types.Expression) (out types.Expression, err error) {
-	journaler.Debug("Evaluating line: %v / %v", e, sc)
 	switch val := e.(type) {
 	case types.Number:
 		out = val
@@ -29,7 +27,6 @@ func Eval(sc scope.Scope, e types.Expression) (out types.Expression, err error) 
 func handleSymbol(sc scope.Scope, s types.Symbol) (out types.Expression, err error) {
 	var ok bool
 	if out, ok = sc.Get(s); !ok {
-		journaler.Debug("Key not found: %v / %v", s, sc)
 		err = common.ErrKeyNotFound
 	}
 
@@ -83,6 +80,5 @@ func handleFn(sc scope.Scope, l types.List) (out types.Expression, err error) {
 	}
 
 	args = l[1:]
-	journaler.Debug("Calling func: %v / %v", l, sc)
 	return fn(sc, args)
 }
