@@ -1,9 +1,31 @@
 package tokens
 
+import (
+	"io/ioutil"
+	"os"
+)
+
 // NewTokens will return a new set of tokens
 func NewTokens(program string) Tokens {
 	tks := toTokens(splitSpaces(expand(program)))
 	return tks
+}
+
+// NewTokensFromFile will return a new set of tokens from a provided filename
+func NewTokensFromFile(filename string) (ts Tokens, err error) {
+	var f *os.File
+	if f, err = os.Open(filename); err != nil {
+		return
+	}
+	defer f.Close()
+
+	var bs []byte
+	if bs, err = ioutil.ReadFile(filename); err != nil {
+		return
+	}
+
+	ts = NewTokens(string(bs))
+	return
 }
 
 // Tokens represents a list of tokens
