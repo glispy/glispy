@@ -37,17 +37,17 @@ func handleSymbol(sc scope.Scope, s types.Symbol) (out types.Expression, err err
 }
 
 func handleList(sc scope.Scope, l types.List) (out types.Expression, err error) {
-	if len(l) == 0 {
-		return
-	}
-
 	var (
 		list types.List
 		ok   bool
 	)
 
+	if len(l) == 0 {
+		return
+	}
+
 	if list, ok = l[0].(types.List); !ok {
-		processList(sc, l)
+		return processList(sc, l)
 	}
 
 	if _, err = handleList(sc, list); err != nil {
