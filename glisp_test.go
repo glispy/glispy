@@ -22,7 +22,7 @@ var (
 )
 
 func TestGlisp(t *testing.T) {
-	g := NewGlisp()
+	g := New()
 	//tkns := NewTokens(`(begin (define foo "bar") (println foo pi))`)
 	//tkns := tokens.NewTokens(`(if (> 3 2) 11 22)`)
 	tkns := tokens.NewTokens(`(
@@ -60,7 +60,7 @@ func BenchmarkGlispAdd(b *testing.B) {
 		err error
 	)
 
-	g := NewGlisp()
+	g := New()
 
 	for i := 0; i < b.N; i++ {
 		tkns := tokens.NewTokens(`(+ 1 3 (+ 2 5))`)
@@ -90,7 +90,7 @@ func BenchmarkGlispSquare(b *testing.B) {
 		err  error
 	)
 
-	g := NewGlisp()
+	g := New()
 	tkns = tokens.NewTokens(square)
 	if exp, err = types.NewExpression(&tkns); err != nil {
 		b.Fatal(err)
@@ -130,7 +130,7 @@ func BenchmarkGlispSquare_PreProcessed(b *testing.B) {
 		err  error
 	)
 
-	g := NewGlisp()
+	g := New()
 	tkns = tokens.NewTokens(square)
 	if exp, err = types.NewExpression(&tkns); err != nil {
 		b.Fatal(err)
@@ -169,7 +169,7 @@ func BenchmarkGlispAdd_PreProcessed(b *testing.B) {
 		err error
 	)
 
-	g := NewGlisp()
+	g := New()
 	tkns := tokens.NewTokens(`(+ 1 3 (+ 2 5))`)
 
 	if exp, err = types.NewExpression(&tkns); err != nil {
