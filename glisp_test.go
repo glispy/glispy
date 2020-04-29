@@ -53,6 +53,28 @@ func TestGlisp(t *testing.T) {
 
 }
 
+func TestGlispAdd(t *testing.T) {
+	var (
+		exp types.Expression
+		val types.Expression
+		err error
+	)
+
+	g := New()
+	tkns := tokens.NewTokens(`(+ 1 3 (+ 2 5))`)
+	if exp, err = types.NewExpression(&tkns); err != nil {
+		t.Fatal(err)
+	}
+
+	if val, err = g.Eval(exp); err != nil {
+		t.Fatal(err)
+	}
+
+	if val.(types.Number) != 11 {
+		t.Fatalf("invalid value, expected %v and received %v", 11, val)
+	}
+}
+
 func BenchmarkGlispAdd(b *testing.B) {
 	var (
 		exp types.Expression
