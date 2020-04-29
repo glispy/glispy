@@ -19,6 +19,9 @@ func Eval(sc scope.Scope, e types.Expression) (out types.Expression, err error) 
 		return handleSymbol(sc, val)
 	case types.List:
 		return handleList(sc, val)
+	// Account for any non-stdlib type
+	case types.Atom:
+		out = val
 	}
 
 	return
@@ -34,8 +37,32 @@ func handleSymbol(sc scope.Scope, s types.Symbol) (out types.Expression, err err
 }
 
 func handleList(sc scope.Scope, l types.List) (out types.Expression, err error) {
-	tkn := l[0]
-	switch tkn {
+	if len(l) == 0 {
+		return
+	}
+
+	var (
+		list types.List
+		ok   bool
+	)
+
+	if list, ok = l[0].(types.List); !ok {
+		processList(sc, l)
+	}
+
+	if _, err = handleList(sc, list); err != nil {
+		return
+	}
+
+	return handleList(sc, l[1:])
+}
+
+func processList(sc scope.Scope, l types.List) (out types.Expression, err error) {
+	if len(l) == 0 {
+		return
+	}
+
+	switch l[0] {
 	case ifSymbol:
 		test := l[1]
 		conseq := l[2]
