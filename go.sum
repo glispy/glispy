@@ -1,0 +1,10 @@
+github.com/Hatch1fy/cron v0.4.76 h1:i9MluLOkCuFNX2F8tjcr7tE4ZKhlmi93v7kIqLy2StY=
+github.com/Hatch1fy/cron v0.4.76/go.mod h1:qTM34B/bZEHUopeeyEIbvRGaZ9OcI0h5JfpLfI19rrU=
+github.com/Hatch1fy/errors v0.4.76 h1:At+EkToySoPJHG04Cc448R1IFadB9jef1K43/x282v4=
+github.com/Hatch1fy/errors v0.4.76/go.mod h1:LPnug0nWT7I99nYl62NfYjxNMCCEx3lBV5YWIco+H0w=
+github.com/hatchify/colors v0.4.76 h1:ok2RDcQKB9GYMsy/KFZXtKOihZEPsoReYQ3/Rr3BHVY=
+github.com/hatchify/colors v0.4.76/go.mod h1:AG6qII7bJEBO7WL28IACU62PqoavhEqpNFhfE/5Zyfk=
+github.com/hatchify/scribe v0.4.76 h1:CZDKPjSmZmZjITH+zhMlvKLH3nn8ZzsEF6sNqaz6RbI=
+github.com/hatchify/scribe v0.4.76/go.mod h1:3YqP22ErbZzHMjbrG4jGAR6mBspBB7rT4gHNT9bHTiA=
+github.com/janne/go-lisp v0.0.0-20170201093635-00f59e552199 h1:FrNgfGQK/6drJqHvhbH0ts9+YessAirA2oTUE+9vxkg=
+github.com/janne/go-lisp v0.0.0-20170201093635-00f59e552199/go.mod h1:zL9RAvgd/lMbIsYZBQ5tVgLBs87uSf9n5ZuQYAmpg64=
