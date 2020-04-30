@@ -1,8 +1,6 @@
 package glisp
 
 import (
-	"math"
-
 	"github.com/itsmontoya/glisp/stdlib/core"
 	gmath "github.com/itsmontoya/glisp/stdlib/math"
 	"github.com/itsmontoya/glisp/tokens"
@@ -14,31 +12,30 @@ import (
 
 // New will return a new instance of Glisp
 func New() (g Glisp) {
-	g.sc = scope.NewRoot()
-	g.setEnvFn("println", core.Println)
-	g.setEnvFn("+", core.Add)
-	g.setEnvFn("*", gmath.Multiply)
-	g.setEnvFn("define", core.Define)
-	g.setEnvFn("defun", core.Defun)
-	g.setEnvFn("begin", core.Begin)
-	g.setEnvFn(">", core.GreaterThan)
-	g.setEnvFn("<", core.LessThan)
-	g.setEnvFn("make-hash-map", core.MakeHashMap)
-	g.setEnvFn("set-hash-value", core.SetHashValue)
-	g.setEnvFn("get-hash-value", core.GetHashValue)
+	s := scope.NewRoot()
+	setFunc(s, "println", core.Println)
+	setFunc(s, "+", core.Add)
+	setFunc(s, "*", gmath.Multiply)
+	setFunc(s, "define", core.Define)
+	setFunc(s, "defun", core.Defun)
+	setFunc(s, "begin", core.Begin)
+	setFunc(s, ">", core.GreaterThan)
+	setFunc(s, "<", core.LessThan)
+	setFunc(s, "make-hash-map", core.MakeHashMap)
+	setFunc(s, "set-hash-value", core.SetHashValue)
+	setFunc(s, "get-hash-value", core.GetHashValue)
+	return NewWithScope(s)
+}
 
-	g.sc.Put("greeting", "Hello world")
-	g.sc.Put("pi", types.Number(math.Pi))
+// NewWithScope will return a new instance of Glisp with a provided scope
+func NewWithScope(s types.Scope) (g Glisp) {
+	g.sc = s
 	return
 }
 
 // Glisp is a lisp worker
 type Glisp struct {
-	sc scope.Scope
-}
-
-func (g *Glisp) setEnvFn(key string, fn types.Function) {
-	g.sc.Put(types.Symbol(key), fn)
+	sc types.Scope
 }
 
 // Eval will evaluate an Expression
@@ -64,5 +61,5 @@ func (g *Glisp) EvalString(str string) (out types.Expression, err error) {
 
 // SetFunc allows Go funcs to be set as lisp funcs
 func (g *Glisp) SetFunc(key string, fn types.Function) {
-	g.setEnvFn(key, fn)
+	setFunc(g.sc, key, fn)
 }
