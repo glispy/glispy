@@ -16,7 +16,7 @@ func MakeHashMap(sc types.Scope, args types.List) (exp types.Expression, err err
 
 	list := types.List{
 		key,
-		make(HashMap),
+		make(map[string]interface{}),
 	}
 
 	if _, err = Define(sc, list); err != nil {
@@ -28,81 +28,74 @@ func MakeHashMap(sc types.Scope, args types.List) (exp types.Expression, err err
 
 // GetHashValue will get a value from a HashMap
 func GetHashValue(sc types.Scope, args types.List) (exp types.Expression, err error) {
-	sym, ok := args[0].(types.Symbol)
-	if !ok {
-		err = fmt.Errorf("invalid key type: expected symbol and received %T", args[0])
+	var atom types.Atom
+	if atom, err = args.GetAtom(0); err != nil {
 		return
 	}
 
-	val, ok := sc.Get(sym)
+	hm, ok := atom.(map[string]interface{})
 	if !ok {
-		err = fmt.Errorf("symbol \"%s\" does not exist within scope", sym)
+		err = fmt.Errorf("expected hashmap as the first argument, received %T", atom)
 		return
 	}
 
-	hm, ok := val.(HashMap)
-	if !ok {
-		err = fmt.Errorf("expected hashmap as the first argument, received %T", val)
+	var key types.String
+	if key, err = args.GetString(1); err != nil {
 		return
 	}
 
-	key, ok := args[1].(types.String)
-	if !ok {
-		err = fmt.Errorf("expected key with type of string as the second argument, received %T", args[1])
-		return
-	}
-
-	exp = hm[key]
+	exp = hm[string(key)]
 	return
 }
 
 // SetHashValue will set a value within a HashMap
 func SetHashValue(sc types.Scope, args types.List) (exp types.Expression, err error) {
-	sym, ok := args[0].(types.Symbol)
-	if !ok {
-		err = fmt.Errorf("invalid key type: expected symbol and received %T", args[0])
+	var atom types.Atom
+	if atom, err = args.GetAtom(0); err != nil {
 		return
 	}
 
-	val, ok := sc.Get(sym)
+	hm, ok := atom.(map[string]interface{})
 	if !ok {
-		err = fmt.Errorf("symbol \"%s\" does not exist within scope", sym)
+		err = fmt.Errorf("expected hashmap as the first argument, received %T", atom)
 		return
 	}
 
-	hm, ok := val.(HashMap)
-	if !ok {
-		err = fmt.Errorf("expected hashmap as the first argument, received %T", val)
+	var key types.String
+	if key, err = args.GetString(1); err != nil {
+		err = fmt.Errorf("error getting key: %v", err)
 		return
 	}
 
-	key, ok := args[1].(types.String)
-	if !ok {
-		err = fmt.Errorf("expected key with type of string as the second argument, received %T", args[1])
+	var val types.Atom
+	if val, err = args.GetAtom(2); err != nil {
+		err = fmt.Errorf("error getting value: %v", err)
 		return
 	}
 
-	hm[key] = args[2]
+	hm[string(key)] = val
 	return
 }
 
 // RemoveHashValue will remove a key within a HashMap
 func RemoveHashValue(sc types.Scope, args types.List) (exp types.Expression, err error) {
-	hm, ok := args[0].(HashMap)
-	if !ok {
-		err = fmt.Errorf("expected hashmap as the first argument, received %T", args[0])
+	var atom types.Atom
+	if atom, err = args.GetAtom(0); err != nil {
 		return
 	}
 
-	key, ok := args[1].(types.String)
+	hm, ok := atom.(map[string]interface{})
 	if !ok {
-		err = fmt.Errorf("expected key with type of string as the second argument, received %T", args[1])
+		err = fmt.Errorf("expected hashmap as the first argument, received %T", atom)
 		return
 	}
 
-	delete(hm, key)
+	var key types.String
+	if key, err = args.GetString(1); err != nil {
+		err = fmt.Errorf("error getting key: %v", err)
+		return
+	}
+
+	delete(hm, string(key))
 	return
 }
-
-// HashMap represents a hash map
-type HashMap map[types.String]interface{}
