@@ -3,8 +3,14 @@ package types
 import (
 	"fmt"
 
+	"github.com/Hatch1fy/errors"
 	"github.com/itsmontoya/glisp/common"
 	"github.com/itsmontoya/glisp/tokens"
+)
+
+const (
+	// ErrOutOfBounds is returned when a requested index is out of bounds
+	ErrOutOfBounds = errors.Error("cannot access argument, out of bounds")
 )
 
 // NewList will return a new list
@@ -37,19 +43,27 @@ func NewList(ts *tokens.Tokens) (l List, err error) {
 type List []Atom
 
 // GetSymbol will get a list item (by index) as a symbol
-func (l List) GetSymbol(index int) (out Symbol, ok bool) {
+func (l List) GetSymbol(index int) (out Symbol, err error) {
 	if len(l) <= index {
+		err = ErrOutOfBounds
 		return
 	}
 
 	val := l[index]
-	out, ok = val.(Symbol)
+
+	var ok bool
+	if out, ok = val.(Symbol); !ok {
+		err = fmt.Errorf("invalid type, expected symbol and received %T", val)
+		return
+	}
+
 	return
 }
 
 // GetString will get a list item (by index) as a string
 func (l List) GetString(index int) (out String, err error) {
 	if len(l) <= index {
+		err = ErrOutOfBounds
 		return
 	}
 
@@ -67,6 +81,7 @@ func (l List) GetString(index int) (out String, err error) {
 // GetNumber will get a list item (by index) as a number
 func (l List) GetNumber(index int) (out Number, err error) {
 	if len(l) <= index {
+		err = ErrOutOfBounds
 		return
 	}
 
@@ -84,6 +99,7 @@ func (l List) GetNumber(index int) (out Number, err error) {
 // GetFunction will get a list item (by index) as a function
 func (l List) GetFunction(index int) (out Function, err error) {
 	if len(l) <= index {
+		err = ErrOutOfBounds
 		return
 	}
 
@@ -101,6 +117,7 @@ func (l List) GetFunction(index int) (out Function, err error) {
 // GetAtom will get a list item (by index) as an atom
 func (l List) GetAtom(index int) (out Atom, err error) {
 	if len(l) <= index {
+		err = ErrOutOfBounds
 		return
 	}
 
