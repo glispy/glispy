@@ -119,7 +119,7 @@ func handleFn(sc types.Scope, l types.List) (out types.Expression, err error) {
 		}
 
 	default:
-		if err = replaceSymbols(sc, l); err != nil {
+		if l, err = replaceSymbols(sc, l); err != nil {
 			return
 		}
 
@@ -132,15 +132,15 @@ func handleFn(sc types.Scope, l types.List) (out types.Expression, err error) {
 	}
 
 	args = l[1:]
-
 	return fn(sc, args)
 }
 
-func replaceSymbols(sc types.Scope, l types.List) (err error) {
+func replaceSymbols(sc types.Scope, l types.List) (out types.List, err error) {
 	var ok bool
-	for i, atom := range l {
+	for _, atom := range l {
 		var sym types.Symbol
 		if sym, ok = atom.(types.Symbol); !ok {
+			out = append(out, atom)
 			continue
 		}
 
@@ -149,7 +149,7 @@ func replaceSymbols(sc types.Scope, l types.List) (err error) {
 			return
 		}
 
-		l[i] = exp
+		out = append(out, exp)
 	}
 
 	return
