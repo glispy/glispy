@@ -37,7 +37,7 @@ type Glisp struct {
 	sc scope.Scope
 }
 
-func (g *Glisp) setEnvFn(key string, fn utils.Func) {
+func (g *Glisp) setEnvFn(key string, fn types.Function) {
 	g.sc.Put(types.Symbol(key), fn)
 }
 
@@ -63,6 +63,6 @@ func (g *Glisp) EvalString(str string) (out types.Expression, err error) {
 }
 
 // SetFunc allows Go funcs to be set as lisp funcs
-func (g *Glisp) SetFunc(key string, fn utils.Func) {
+func (g *Glisp) SetFunc(key string, fn types.Function) {
 	g.setEnvFn(key, fn)
 }
