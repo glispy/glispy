@@ -3,12 +3,11 @@ package core
 import (
 	"fmt"
 
-	"github.com/itsmontoya/glisp/scope"
 	"github.com/itsmontoya/glisp/types"
 )
 
 // MakeHashMap will make a new hash map
-func MakeHashMap(sc scope.Scope, args types.List) (exp types.Expression, err error) {
+func MakeHashMap(sc types.Scope, args types.List) (exp types.Expression, err error) {
 	key, ok := args[0].(types.Symbol)
 	if !ok {
 		err = fmt.Errorf("invalid key type: expected symbol and received %T", args[0])
@@ -28,7 +27,7 @@ func MakeHashMap(sc scope.Scope, args types.List) (exp types.Expression, err err
 }
 
 // GetHashValue will get a value from a HashMap
-func GetHashValue(sc scope.Scope, args types.List) (exp types.Expression, err error) {
+func GetHashValue(sc types.Scope, args types.List) (exp types.Expression, err error) {
 	sym, ok := args[0].(types.Symbol)
 	if !ok {
 		err = fmt.Errorf("invalid key type: expected symbol and received %T", args[0])
@@ -58,7 +57,7 @@ func GetHashValue(sc scope.Scope, args types.List) (exp types.Expression, err er
 }
 
 // SetHashValue will set a value within a HashMap
-func SetHashValue(sc scope.Scope, args types.List) (exp types.Expression, err error) {
+func SetHashValue(sc types.Scope, args types.List) (exp types.Expression, err error) {
 	sym, ok := args[0].(types.Symbol)
 	if !ok {
 		err = fmt.Errorf("invalid key type: expected symbol and received %T", args[0])
@@ -88,7 +87,7 @@ func SetHashValue(sc scope.Scope, args types.List) (exp types.Expression, err er
 }
 
 // RemoveHashValue will remove a key within a HashMap
-func RemoveHashValue(sc scope.Scope, args types.List) (exp types.Expression, err error) {
+func RemoveHashValue(sc types.Scope, args types.List) (exp types.Expression, err error) {
 	hm, ok := args[0].(HashMap)
 	if !ok {
 		err = fmt.Errorf("expected hashmap as the first argument, received %T", args[0])

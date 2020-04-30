@@ -4,14 +4,13 @@ import (
 	"fmt"
 
 	"github.com/itsmontoya/glisp/common"
-	"github.com/itsmontoya/glisp/scope"
 	"github.com/itsmontoya/glisp/types"
 )
 
 const ifSymbol = types.Symbol("if")
 
 // Eval will evaluate an Expression
-func Eval(sc scope.Scope, e types.Expression) (out types.Expression, err error) {
+func Eval(sc types.Scope, e types.Expression) (out types.Expression, err error) {
 	switch val := e.(type) {
 	case types.Number:
 		out = val
@@ -29,7 +28,7 @@ func Eval(sc scope.Scope, e types.Expression) (out types.Expression, err error) 
 	return
 }
 
-func handleSymbol(sc scope.Scope, s types.Symbol) (out types.Expression, err error) {
+func handleSymbol(sc types.Scope, s types.Symbol) (out types.Expression, err error) {
 	var ok bool
 	if out, ok = sc.Get(s); !ok {
 		err = fmt.Errorf("symbol of \"%s\" was not found", s)
@@ -39,7 +38,7 @@ func handleSymbol(sc scope.Scope, s types.Symbol) (out types.Expression, err err
 	return
 }
 
-func tryHandleSymbol(sc scope.Scope, a types.Atom) (out types.Expression, err error) {
+func tryHandleSymbol(sc types.Scope, a types.Atom) (out types.Expression, err error) {
 	var (
 		sym types.Symbol
 		ok  bool
@@ -53,7 +52,7 @@ func tryHandleSymbol(sc scope.Scope, a types.Atom) (out types.Expression, err er
 	return handleSymbol(sc, sym)
 }
 
-func handleList(sc scope.Scope, l types.List) (out types.Expression, err error) {
+func handleList(sc types.Scope, l types.List) (out types.Expression, err error) {
 	// TODO: Change this entire func to an interating loop approach
 	var (
 		list types.List
@@ -79,7 +78,7 @@ func handleList(sc scope.Scope, l types.List) (out types.Expression, err error) 
 	return handleList(sc, l)
 }
 
-func processList(sc scope.Scope, l types.List) (out types.Expression, err error) {
+func processList(sc types.Scope, l types.List) (out types.Expression, err error) {
 	if len(l) == 0 {
 		return
 	}
@@ -104,38 +103,32 @@ func processList(sc scope.Scope, l types.List) (out types.Expression, err error)
 	}
 }
 
-func handleFn(sc scope.Scope, l types.List) (out types.Expression, err error) {
+func handleFn(sc types.Scope, l types.List) (out types.Expression, err error) {
 	var (
+		ref  types.Expression
 		fn   types.Function
 		args types.List
 		ok   bool
 	)
 
-	fmt.Println("Handle func:", l[0])
-
 	switch l[0] {
+	// We check to see if the symbol is define or defun. If either, we do not want to replace the values
 	case types.Symbol("define"), types.Symbol("defun"):
-		fmt.Println("Define/defun")
-		var ref types.Expression
 		if ref, err = tryHandleSymbol(sc, l[0]); err != nil {
 			return
 		}
 
-		if fn, ok = ref.(types.Function); !ok {
-			err = common.ErrExpectedFn
-			return
-		}
-
 	default:
-		fmt.Println("Not define or defun")
 		if err = replaceSymbols(sc, l); err != nil {
 			return
 		}
 
-		if fn, ok = l[0].(types.Function); !ok {
-			err = common.ErrExpectedFn
-			return
-		}
+		ref = l[0]
+	}
+
+	if fn, ok = ref.(types.Function); !ok {
+		err = common.ErrExpectedFn
+		return
 	}
 
 	args = l[1:]
@@ -145,20 +138,17 @@ func handleFn(sc scope.Scope, l types.List) (out types.Expression, err error) {
 
 func replaceSymbols(sc types.Scope, l types.List) (err error) {
 	var ok bool
-	fmt.Println("Replacing for", l)
 	for i, atom := range l {
 		var sym types.Symbol
 		if sym, ok = atom.(types.Symbol); !ok {
 			continue
 		}
 
-		fmt.Println("Yes?", sym)
 		var exp types.Expression
 		if exp, err = handleSymbol(sc, sym); err != nil {
 			return
 		}
 
-		fmt.Println("Replacing!", i, exp)
 		l[i] = exp
 	}
 
@@ -168,7 +158,7 @@ func replaceSymbols(sc types.Scope, l types.List) (err error) {
 /*
 Delete this if everything works
 
-func handleFn(sc scope.Scope, l types.List) (out types.Expression, err error) {
+func handleFn(sc types.Scope, l types.List) (out types.Expression, err error) {
 	var (
 		sym  types.Symbol
 		ref  types.Expression

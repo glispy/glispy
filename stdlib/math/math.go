@@ -2,13 +2,12 @@ package math
 
 import (
 	"github.com/itsmontoya/glisp/common"
-	"github.com/itsmontoya/glisp/scope"
 	"github.com/itsmontoya/glisp/types"
 	"github.com/itsmontoya/glisp/utils"
 )
 
 // Add will add a series of numbers
-func Add(sc scope.Scope, args types.List) (out types.Expression, err error) {
+func Add(sc types.Scope, args types.List) (out types.Expression, err error) {
 	var (
 		n   types.Number
 		num types.Number
@@ -45,7 +44,7 @@ func Add(sc scope.Scope, args types.List) (out types.Expression, err error) {
 }
 
 // Multiply will multiply a series of numbers
-func Multiply(sc scope.Scope, args types.List) (out types.Expression, err error) {
+func Multiply(sc types.Scope, args types.List) (out types.Expression, err error) {
 	var (
 		n   types.Number
 		num types.Number
@@ -68,7 +67,7 @@ func Multiply(sc scope.Scope, args types.List) (out types.Expression, err error)
 }
 
 // LessThan will return if a is less than b
-func LessThan(sc scope.Scope, an types.Number, b types.Atom) (out types.Expression, err error) {
+func LessThan(sc types.Scope, an types.Number, b types.Atom) (out types.Expression, err error) {
 	var bn types.Number
 	if bn, err = utils.GetNumber(sc, b); err != nil {
 		return
@@ -82,7 +81,7 @@ func LessThan(sc scope.Scope, an types.Number, b types.Atom) (out types.Expressi
 }
 
 // GreaterThan will return if a is greater than b
-func GreaterThan(sc scope.Scope, an types.Number, b types.Atom) (out types.Expression, err error) {
+func GreaterThan(sc types.Scope, an types.Number, b types.Atom) (out types.Expression, err error) {
 	var bn types.Number
 	if bn, err = utils.GetNumber(sc, b); err != nil {
 		return
