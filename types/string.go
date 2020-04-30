@@ -1,8 +1,8 @@
 package types
 
 import (
+	"github.com/Hatch1fy/errors"
 	"github.com/itsmontoya/glisp/tokens"
-	"github.com/missionMeteora/toolkit/errors"
 )
 
 // ErrInvalidString is returned when a string is invalid

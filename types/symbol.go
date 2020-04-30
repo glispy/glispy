@@ -3,8 +3,8 @@ package types
 import (
 	"regexp"
 
+	"github.com/Hatch1fy/errors"
 	"github.com/itsmontoya/glisp/tokens"
-	"github.com/missionMeteora/toolkit/errors"
 )
 
 // ErrInvalidSymbol is returned when a symbol is invalid

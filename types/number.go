@@ -3,8 +3,8 @@ package types
 import (
 	"strconv"
 
+	"github.com/Hatch1fy/errors"
 	"github.com/itsmontoya/glisp/tokens"
-	"github.com/missionMeteora/toolkit/errors"
 )
 
 // ErrInvalidNumber is returned when a number is invalid

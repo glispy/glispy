@@ -1,6 +1,7 @@
 package core
 
 import (
+	"github.com/hatchify/scribe"
 	gmath "github.com/itsmontoya/glisp/stdlib/math"
 	gstrings "github.com/itsmontoya/glisp/stdlib/strings"
 
@@ -8,8 +9,9 @@ import (
 	"github.com/itsmontoya/glisp/scope"
 	"github.com/itsmontoya/glisp/types"
 	"github.com/itsmontoya/glisp/utils"
-	"github.com/missionMeteora/journaler"
 )
+
+var out = scribe.New("Glisp")
 
 // Println will print a line to stdout
 func Println(sc types.Scope, args types.List) (_ types.Expression, err error) {
@@ -18,7 +20,7 @@ func Println(sc types.Scope, args types.List) (_ types.Expression, err error) {
 		return
 	}
 
-	journaler.Notification("Glisp: %v", exp)
+	out.Notificationf("Glisp: %v", exp)
 	return
 }
 

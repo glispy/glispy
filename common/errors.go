@@ -1,6 +1,6 @@
 package common
 
-import "github.com/missionMeteora/toolkit/errors"
+import "github.com/Hatch1fy/errors"
 
 const (
 	// ErrUnexpectedEOF is returned when an end is encountered before it was expected
