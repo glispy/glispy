@@ -1,6 +1,8 @@
 package glisp
 
 import (
+	"io/ioutil"
+
 	"github.com/itsmontoya/glisp/stdlib/core"
 	gmath "github.com/itsmontoya/glisp/stdlib/math"
 	"github.com/itsmontoya/glisp/tokens"
@@ -57,6 +59,16 @@ func (g *Glisp) EvalTokens(ts *tokens.Tokens) (out types.Expression, err error) 
 func (g *Glisp) EvalString(str string) (out types.Expression, err error) {
 	ts := tokens.NewTokens(str)
 	return g.EvalTokens(&ts)
+}
+
+// EvalFile will evaluate a file as an Expression
+func (g *Glisp) EvalFile(filename string) (out types.Expression, err error) {
+	var bs []byte
+	if bs, err = ioutil.ReadFile(filename); err != nil {
+		return
+	}
+
+	return g.EvalString(string(bs))
 }
 
 // SetFunc allows Go funcs to be set as lisp funcs
