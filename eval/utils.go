@@ -1,4 +1,4 @@
-package utils
+package eval
 
 import (
 	"github.com/itsmontoya/glisp/common"

@@ -2,8 +2,8 @@ package math
 
 import (
 	"github.com/itsmontoya/glisp/common"
+	"github.com/itsmontoya/glisp/eval"
 	"github.com/itsmontoya/glisp/types"
-	"github.com/itsmontoya/glisp/utils"
 )
 
 // Add will add a series of numbers
@@ -22,7 +22,7 @@ func Add(sc types.Scope, args types.List) (out types.Expression, err error) {
 			n += val
 		case types.List:
 			var exp types.Expression
-			if exp, err = utils.Eval(sc, val); err != nil {
+			if exp, err = eval.Eval(sc, val); err != nil {
 				return
 			}
 
@@ -51,7 +51,7 @@ func Multiply(sc types.Scope, args types.List) (out types.Expression, err error)
 	)
 
 	for i, exp := range args {
-		if num, err = utils.GetNumber(sc, exp); err != nil {
+		if num, err = eval.GetNumber(sc, exp); err != nil {
 			return
 		}
 
@@ -69,7 +69,7 @@ func Multiply(sc types.Scope, args types.List) (out types.Expression, err error)
 // LessThan will return if a is less than b
 func LessThan(sc types.Scope, an types.Number, b types.Atom) (out types.Expression, err error) {
 	var bn types.Number
-	if bn, err = utils.GetNumber(sc, b); err != nil {
+	if bn, err = eval.GetNumber(sc, b); err != nil {
 		return
 	}
 
@@ -83,7 +83,7 @@ func LessThan(sc types.Scope, an types.Number, b types.Atom) (out types.Expressi
 // GreaterThan will return if a is greater than b
 func GreaterThan(sc types.Scope, an types.Number, b types.Atom) (out types.Expression, err error) {
 	var bn types.Number
-	if bn, err = utils.GetNumber(sc, b); err != nil {
+	if bn, err = eval.GetNumber(sc, b); err != nil {
 		return
 	}
 

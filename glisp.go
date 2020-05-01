@@ -3,10 +3,10 @@ package glisp
 import (
 	"io/ioutil"
 
+	"github.com/itsmontoya/glisp/eval"
 	"github.com/itsmontoya/glisp/stdlib/core"
 	gmath "github.com/itsmontoya/glisp/stdlib/math"
 	"github.com/itsmontoya/glisp/tokens"
-	"github.com/itsmontoya/glisp/utils"
 
 	"github.com/itsmontoya/glisp/scope"
 	"github.com/itsmontoya/glisp/types"
@@ -42,7 +42,7 @@ type Glisp struct {
 
 // Eval will evaluate an Expression
 func (g *Glisp) Eval(e types.Expression) (out types.Expression, err error) {
-	return utils.Eval(g.sc, e)
+	return eval.Eval(g.sc, e)
 }
 
 // EvalTokens will evaluate tokens as an Expression

@@ -2,13 +2,13 @@ package core
 
 import (
 	"github.com/hatchify/scribe"
+	"github.com/itsmontoya/glisp/eval"
 	gmath "github.com/itsmontoya/glisp/stdlib/math"
 	gstrings "github.com/itsmontoya/glisp/stdlib/strings"
 
 	"github.com/itsmontoya/glisp/common"
 	"github.com/itsmontoya/glisp/scope"
 	"github.com/itsmontoya/glisp/types"
-	"github.com/itsmontoya/glisp/utils"
 )
 
 var out = scribe.New("Glisp")
@@ -16,7 +16,7 @@ var out = scribe.New("Glisp")
 // Println will print a line to stdout
 func Println(sc types.Scope, args types.List) (_ types.Expression, err error) {
 	var exp types.Expression
-	if exp, err = utils.Eval(sc, args[0]); err != nil {
+	if exp, err = eval.Eval(sc, args[0]); err != nil {
 		return
 	}
 
@@ -47,7 +47,7 @@ func Define(sc types.Scope, args types.List) (_ types.Expression, err error) {
 		return
 	}
 
-	if exp, err = utils.Eval(sc, exp); err != nil {
+	if exp, err = eval.Eval(sc, exp); err != nil {
 		return
 	}
 
@@ -62,7 +62,7 @@ func LessThan(sc types.Scope, args types.List) (out types.Expression, err error)
 		return
 	}
 
-	if out, err = utils.Eval(sc, args[0]); err != nil {
+	if out, err = eval.Eval(sc, args[0]); err != nil {
 		return
 	}
 
@@ -86,7 +86,7 @@ func GreaterThan(sc types.Scope, args types.List) (out types.Expression, err err
 		return
 	}
 
-	if out, err = utils.Eval(sc, args[0]); err != nil {
+	if out, err = eval.Eval(sc, args[0]); err != nil {
 		return
 	}
 
@@ -154,7 +154,7 @@ func Defun(sc types.Scope, args types.List) (_ types.Expression, err error) {
 				fsc.Put(sym, arg)
 			}
 
-			if out, err = utils.Eval(fsc, exp); err != nil {
+			if out, err = eval.Eval(fsc, exp); err != nil {
 				return
 			}
 
@@ -183,7 +183,7 @@ func Add(sc types.Scope, args types.List) (exp types.Expression, err error) {
 // Begin will begin an expression
 func Begin(sc types.Scope, args types.List) (_ types.Expression, err error) {
 	for _, arg := range args {
-		if _, err = utils.Eval(sc, arg); err != nil {
+		if _, err = eval.Eval(sc, arg); err != nil {
 			return
 		}
 	}
