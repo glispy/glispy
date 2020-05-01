@@ -137,6 +137,7 @@ func handleFn(sc types.Scope, l types.List) (out types.Expression, err error) {
 
 func replaceSymbols(sc types.Scope, l types.List) (out types.List, err error) {
 	var ok bool
+	out = make(types.List, 0, len(l))
 	for _, atom := range l {
 		var sym types.Symbol
 		if sym, ok = atom.(types.Symbol); !ok {
