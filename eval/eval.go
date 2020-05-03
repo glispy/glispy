@@ -3,8 +3,8 @@ package eval
 import (
 	"fmt"
 
-	"github.com/itsmontoya/glisp/common"
-	"github.com/itsmontoya/glisp/types"
+	"github.com/glispy/glispy/common"
+	"github.com/glispy/glispy/types"
 )
 
 const ifSymbol = types.Symbol("if")

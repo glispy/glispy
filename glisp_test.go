@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/itsmontoya/glisp/tokens"
-	"github.com/itsmontoya/glisp/types"
+	"github.com/glispy/glispy/tokens"
+	"github.com/glispy/glispy/types"
 	"github.com/janne/go-lisp/lisp"
 )
 

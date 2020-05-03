@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/Hatch1fy/errors"
-	"github.com/itsmontoya/glisp/common"
-	"github.com/itsmontoya/glisp/tokens"
+	"github.com/glispy/glispy/common"
+	"github.com/glispy/glispy/tokens"
 )
 
 const (

@@ -1,4 +1,4 @@
-module github.com/itsmontoya/glisp
+module github.com/glispy/glispy
 
 go 1.14
 

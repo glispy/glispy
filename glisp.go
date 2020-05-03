@@ -3,13 +3,12 @@ package glisp
 import (
 	"io/ioutil"
 
-	"github.com/itsmontoya/glisp/eval"
-	"github.com/itsmontoya/glisp/stdlib/core"
-	gmath "github.com/itsmontoya/glisp/stdlib/math"
-	"github.com/itsmontoya/glisp/tokens"
-
-	"github.com/itsmontoya/glisp/scope"
-	"github.com/itsmontoya/glisp/types"
+	"github.com/glispy/glispy/eval"
+	"github.com/glispy/glispy/scope"
+	"github.com/glispy/glispy/stdlib/core"
+	gmath "github.com/glispy/glispy/stdlib/math"
+	"github.com/glispy/glispy/tokens"
+	"github.com/glispy/glispy/types"
 )
 
 // New will return a new instance of Glisp
