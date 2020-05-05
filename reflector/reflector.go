@@ -8,6 +8,7 @@ import (
 // New will return a new instance of reflector
 func New(tag string) *Reflector {
 	var r Reflector
+	r.tag = tag
 	r.m = make(map[reflect.Type]Cached)
 	return &r
 }
