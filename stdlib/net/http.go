@@ -8,7 +8,8 @@ import (
 	"github.com/glispy/glispy/types"
 )
 
-func httpGetRequest(sc types.Scope, args types.List) (exp types.Expression, err error) {
+// HTTPGetRequest makes an HTTP get request
+func HTTPGetRequest(sc types.Scope, args types.List) (exp types.Expression, err error) {
 	var url types.String
 	if url, err = args.GetString(0); err != nil {
 		err = fmt.Errorf("invalid key: %v", err)
@@ -26,5 +27,6 @@ func httpGetRequest(sc types.Scope, args types.List) (exp types.Expression, err 
 		return
 	}
 
+	exp = m
 	return
 }
