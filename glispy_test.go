@@ -53,6 +53,27 @@ func TestGlispy(t *testing.T) {
 
 }
 
+func TestGlispyDefine(t *testing.T) {
+	var (
+		val types.Expression
+		err error
+	)
+
+	g := New()
+	src := `(
+	(define (quote x) 1337)
+	(println x)
+)`
+
+	//(define (quote x) 1337)
+
+	if val, err = g.EvalString(src); err != nil {
+		t.Fatal(err)
+	}
+
+	fmt.Println("Returned", val)
+}
+
 func TestGlispyAdd(t *testing.T) {
 	var (
 		exp types.Expression
@@ -115,6 +136,23 @@ func TestGetSetValue_struct(t *testing.T) {
 		(set-value foo "b" 1337)
 		(get-value foo "a")
 	)`); err != nil {
+		t.Fatal(err)
+	}
+
+	fmt.Println("Value", val)
+}
+
+func TestHTTPGet(t *testing.T) {
+	var (
+		val types.Expression
+		err error
+	)
+
+	g := New()
+	if val, err = g.EvalString(`(
+	(define resp (http-get "https://cat-fact.herokuapp.com/facts/random"))
+	(get-value resp "text")
+)`); err != nil {
 		t.Fatal(err)
 	}
 
