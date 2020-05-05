@@ -1,13 +1,13 @@
 package core
 
 import (
-	gmath "github.com/glispyy/glispyy/stdlib/math"
-	gstrings "github.com/glispyy/glispyy/stdlib/strings"
+	gmath "github.com/glispy/glispy/stdlib/math"
+	gstrings "github.com/glispy/glispy/stdlib/strings"
 
-	"github.com/glispyy/glispyy/common"
-	"github.com/glispyy/glispyy/eval"
-	"github.com/glispyy/glispyy/scope"
-	"github.com/glispyy/glispyy/types"
+	"github.com/glispy/glispy/common"
+	"github.com/glispy/glispy/eval"
+	"github.com/glispy/glispy/scope"
+	"github.com/glispy/glispy/types"
 	"github.com/hatchify/scribe"
 )
 

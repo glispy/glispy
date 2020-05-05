@@ -1,8 +1,8 @@
 package eval
 
 import (
-	"github.com/glispyy/glispyy/common"
-	"github.com/glispyy/glispyy/types"
+	"github.com/glispy/glispy/common"
+	"github.com/glispy/glispy/types"
 )
 
 // GetNumber will get a number from an expression

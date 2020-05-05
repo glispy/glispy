@@ -2,7 +2,7 @@ package types
 
 import (
 	"github.com/Hatch1fy/errors"
-	"github.com/glispyy/glispyy/tokens"
+	"github.com/glispy/glispy/tokens"
 )
 
 // ErrInvalidAtom is returned when an atom is invalid

@@ -4,7 +4,7 @@ import (
 	"regexp"
 
 	"github.com/Hatch1fy/errors"
-	"github.com/glispyy/glispyy/tokens"
+	"github.com/glispy/glispy/tokens"
 )
 
 // ErrInvalidSymbol is returned when a symbol is invalid

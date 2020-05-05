@@ -1,9 +1,9 @@
 package math
 
 import (
-	"github.com/glispyy/glispyy/common"
-	"github.com/glispyy/glispyy/eval"
-	"github.com/glispyy/glispyy/types"
+	"github.com/glispy/glispy/common"
+	"github.com/glispy/glispy/eval"
+	"github.com/glispy/glispy/types"
 )
 
 // Add will add a series of numbers

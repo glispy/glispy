@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/glispyy/glispyy/tokens"
-	"github.com/glispyy/glispyy/types"
+	"github.com/glispy/glispy/tokens"
+	"github.com/glispy/glispy/types"
 	"github.com/janne/go-lisp/lisp"
 )
 
@@ -101,8 +101,8 @@ func TestGetSetValue_struct(t *testing.T) {
 	)
 
 	type S struct {
-		A string  `glispyy:"a"`
-		B float32 `glispyy:"b"`
+		A string  `glispy:"a"`
+		B float32 `glispy:"b"`
 		C string
 	}
 

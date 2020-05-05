@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/glispyy/glispyy/reflector"
-	"github.com/glispyy/glispyy/types"
+	"github.com/glispy/glispy/reflector"
+	"github.com/glispy/glispy/types"
 )
 
-var rl = reflector.New("glispyy")
+var rl = reflector.New("glispy")
 
 // GetValue will get a value from a data structure
 func GetValue(sc types.Scope, args types.List) (exp types.Expression, err error) {
