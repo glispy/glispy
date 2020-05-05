@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/glispy/glispy/types"
+	"github.com/glispyy/glispyy/types"
 )
 
 func httpGetRequest(sc types.Scope, args types.List) (exp types.Expression, err error) {

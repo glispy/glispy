@@ -1,8 +1,8 @@
 package types
 
 import (
-	"github.com/glispy/glispy/common"
-	"github.com/glispy/glispy/tokens"
+	"github.com/glispyy/glispyy/common"
+	"github.com/glispyy/glispyy/tokens"
 )
 
 // NewExpression will return a new expression from Tokens

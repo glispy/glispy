@@ -1,17 +1,17 @@
 package core
 
 import (
-	gmath "github.com/glispy/glispy/stdlib/math"
-	gstrings "github.com/glispy/glispy/stdlib/strings"
+	gmath "github.com/glispyy/glispyy/stdlib/math"
+	gstrings "github.com/glispyy/glispyy/stdlib/strings"
 
-	"github.com/glispy/glispy/common"
-	"github.com/glispy/glispy/eval"
-	"github.com/glispy/glispy/scope"
-	"github.com/glispy/glispy/types"
+	"github.com/glispyy/glispyy/common"
+	"github.com/glispyy/glispyy/eval"
+	"github.com/glispyy/glispyy/scope"
+	"github.com/glispyy/glispyy/types"
 	"github.com/hatchify/scribe"
 )
 
-var out = scribe.New("Glisp")
+var out = scribe.New("Glispy")
 
 // Println will print a line to stdout
 func Println(sc types.Scope, args types.List) (_ types.Expression, err error) {
@@ -20,7 +20,7 @@ func Println(sc types.Scope, args types.List) (_ types.Expression, err error) {
 		return
 	}
 
-	out.Notificationf("Glispy: %v", exp)
+	out.Notificationf("Glispyy: %v", exp)
 	return
 }
 

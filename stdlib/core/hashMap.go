@@ -3,7 +3,7 @@ package core
 import (
 	"fmt"
 
-	"github.com/glispy/glispy/types"
+	"github.com/glispyy/glispyy/types"
 )
 
 // MakeHashMap will make a new hash map

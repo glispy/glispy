@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/glispy/glispy/reflector"
-	"github.com/glispy/glispy/types"
+	"github.com/glispyy/glispyy/reflector"
+	"github.com/glispyy/glispyy/types"
 )
 
-var rl = reflector.New("glispy")
+var rl = reflector.New("glispyy")
 
 // GetValue will get a value from a data structure
 func GetValue(sc types.Scope, args types.List) (exp types.Expression, err error) {
@@ -69,7 +69,7 @@ func getValueFromAtom(target types.Atom, key string) (exp types.Expression, err 
 	var ok bool
 	switch v := target.(type) {
 	case Getter:
-		exp, ok = v.GetGlispValue(key)
+		exp, ok = v.GetGlispyValue(key)
 	case map[string]interface{}:
 		exp, ok = v[key]
 
@@ -91,7 +91,7 @@ func setValueToAtom(target types.Atom, key string, value types.Atom) (exp types.
 	var ok bool
 	switch v := target.(type) {
 	case Setter:
-		if ok, err = v.SetGlispValue(key, value); err != nil {
+		if ok, err = v.SetGlispyValue(key, value); err != nil {
 			return
 		}
 	case map[string]interface{}:
@@ -117,7 +117,7 @@ func removeValueFromAtom(target types.Atom, key string) (exp types.Expression, e
 	var ok bool
 	switch v := target.(type) {
 	case Remover:
-		ok = v.RemoveGlispValue(key)
+		ok = v.RemoveGlispyValue(key)
 	case map[string]interface{}:
 		delete(v, key)
 
@@ -281,17 +281,17 @@ func removeReflectValueFromAtom(target types.Atom, key string) (ok bool, err err
 	return
 }
 
-// Getter represents a data structure that can be accessed from within Glisp
+// Getter represents a data structure that can be accessed from within Glispy
 type Getter interface {
-	GetGlispValue(key string) (value types.Atom, ok bool)
+	GetGlispyValue(key string) (value types.Atom, ok bool)
 }
 
-// Setter represents a data structure that can be set from within Glisp
+// Setter represents a data structure that can be set from within Glispy
 type Setter interface {
-	SetGlispValue(key string, value types.Atom) (ok bool, err error)
+	SetGlispyValue(key string, value types.Atom) (ok bool, err error)
 }
 
-// Remover represents a data structure that can be removed from within Glisp
+// Remover represents a data structure that can be removed from within Glispy
 type Remover interface {
-	RemoveGlispValue(key string) (ok bool)
+	RemoveGlispyValue(key string) (ok bool)
 }

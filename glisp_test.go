@@ -1,11 +1,11 @@
-package glisp
+package glispy
 
 import (
 	"fmt"
 	"testing"
 
-	"github.com/glispy/glispy/tokens"
-	"github.com/glispy/glispy/types"
+	"github.com/glispyy/glispyy/tokens"
+	"github.com/glispyy/glispyy/types"
 	"github.com/janne/go-lisp/lisp"
 )
 
@@ -17,11 +17,11 @@ const (
 )
 
 var (
-	glispSink  types.Expression
+	glispySink types.Expression
 	goLispSink lisp.Value
 )
 
-func TestGlisp(t *testing.T) {
+func TestGlispy(t *testing.T) {
 	g := New()
 	//tkns := NewTokens(`(begin (define foo "bar") (println foo pi))`)
 	//tkns := tokens.NewTokens(`(if (> 3 2) 11 22)`)
@@ -53,7 +53,7 @@ func TestGlisp(t *testing.T) {
 
 }
 
-func TestGlispAdd(t *testing.T) {
+func TestGlispyAdd(t *testing.T) {
 	var (
 		exp types.Expression
 		val types.Expression
@@ -101,8 +101,8 @@ func TestGetSetValue_struct(t *testing.T) {
 	)
 
 	type S struct {
-		A string  `glispy:"a"`
-		B float32 `glispy:"b"`
+		A string  `glispyy:"a"`
+		B float32 `glispyy:"b"`
 		C string
 	}
 
@@ -121,7 +121,7 @@ func TestGetSetValue_struct(t *testing.T) {
 	fmt.Println("Value", val)
 }
 
-func BenchmarkGlispAdd(b *testing.B) {
+func BenchmarkGlispyAdd(b *testing.B) {
 	var (
 		exp types.Expression
 		val types.Expression
@@ -144,13 +144,13 @@ func BenchmarkGlispAdd(b *testing.B) {
 			b.Fatalf("invalid value, expected %v and received %v", 11, val)
 		}
 
-		glispSink = val
+		glispySink = val
 	}
 
 	b.ReportAllocs()
 }
 
-func BenchmarkGlispSquare(b *testing.B) {
+func BenchmarkGlispySquare(b *testing.B) {
 	var (
 		exp  types.Expression
 		val  types.Expression
@@ -184,13 +184,13 @@ func BenchmarkGlispSquare(b *testing.B) {
 			b.Fatalf("invalid value, expected %v and received %v", 11, val)
 		}
 
-		glispSink = val
+		glispySink = val
 	}
 
 	b.ReportAllocs()
 }
 
-func BenchmarkGlispSquare_PreProcessed(b *testing.B) {
+func BenchmarkGlispySquare_PreProcessed(b *testing.B) {
 	var (
 		exp  types.Expression
 		val  types.Expression
@@ -224,13 +224,13 @@ func BenchmarkGlispSquare_PreProcessed(b *testing.B) {
 			b.Fatalf("invalid value, expected %v and received %v", 11, val)
 		}
 
-		glispSink = val
+		glispySink = val
 	}
 
 	b.ReportAllocs()
 }
 
-func BenchmarkGlispAdd_PreProcessed(b *testing.B) {
+func BenchmarkGlispyAdd_PreProcessed(b *testing.B) {
 	var (
 		exp types.Expression
 		val types.Expression
@@ -253,7 +253,7 @@ func BenchmarkGlispAdd_PreProcessed(b *testing.B) {
 			b.Fatalf("invalid value, expected %v and received %v", 11, val)
 		}
 
-		glispSink = val
+		glispySink = val
 	}
 
 	b.ReportAllocs()

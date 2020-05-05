@@ -2,7 +2,7 @@ package types
 
 import (
 	"github.com/Hatch1fy/errors"
-	"github.com/glispy/glispy/tokens"
+	"github.com/glispyy/glispyy/tokens"
 )
 
 // ErrInvalidString is returned when a string is invalid

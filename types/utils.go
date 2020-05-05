@@ -1,8 +1,8 @@
 package types
 
 import (
-	"github.com/glispy/glispy/common"
-	"github.com/glispy/glispy/tokens"
+	"github.com/glispyy/glispyy/common"
+	"github.com/glispyy/glispyy/tokens"
 )
 
 func toExpression(ts *tokens.Tokens, token tokens.Token) (e Expression, err error) {

@@ -1,6 +1,6 @@
 package scope
 
-import "github.com/glispy/glispy/types"
+import "github.com/glispyy/glispyy/types"
 
 // NewRoot will return a new root scope
 func NewRoot() *Root {

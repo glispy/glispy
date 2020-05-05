@@ -1,6 +1,6 @@
 package scope
 
-import "github.com/glispy/glispy/types"
+import "github.com/glispyy/glispyy/types"
 
 // Scope represents a scope layer
 type Scope interface {

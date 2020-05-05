@@ -3,7 +3,7 @@ package scope
 import (
 	"testing"
 
-	"github.com/glispy/glispy/types"
+	"github.com/glispyy/glispyy/types"
 )
 
 const (

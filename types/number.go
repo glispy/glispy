@@ -4,7 +4,7 @@ import (
 	"strconv"
 
 	"github.com/Hatch1fy/errors"
-	"github.com/glispy/glispy/tokens"
+	"github.com/glispyy/glispyy/tokens"
 )
 
 // ErrInvalidNumber is returned when a number is invalid
