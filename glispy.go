@@ -7,7 +7,8 @@ import (
 	"github.com/glispy/glispy/eval"
 	"github.com/glispy/glispy/scope"
 	"github.com/glispy/glispy/stdlib/core"
-	gmath "github.com/glispy/glispy/stdlib/math"
+	"github.com/glispy/glispy/stdlib/math"
+	"github.com/glispy/glispy/stdlib/net"
 	"github.com/glispy/glispy/tokens"
 	"github.com/glispy/glispy/types"
 )
@@ -15,9 +16,10 @@ import (
 // New will return a new instance of Glispy
 func New() (g Glispy) {
 	s := scope.NewRoot()
+	setFunc(s, "quote", core.Quote)
 	setFunc(s, "println", core.Println)
 	setFunc(s, "+", core.Add)
-	setFunc(s, "*", gmath.Multiply)
+	setFunc(s, "*", math.Multiply)
 	setFunc(s, "define", core.Define)
 	setFunc(s, "defun", core.Defun)
 	setFunc(s, "begin", core.Begin)
@@ -27,6 +29,7 @@ func New() (g Glispy) {
 	setFunc(s, "get-value", core.GetValue)
 	setFunc(s, "set-value", core.SetValue)
 	setFunc(s, "remove-value", core.RemoveValue)
+	setFunc(s, "http-get", net.HTTPGetRequest)
 	return NewWithScope(s)
 }
 
@@ -78,17 +81,18 @@ func (g *Glispy) SetFunc(key string, fn types.Function) {
 }
 
 // CallFunc will call a func within the global scope
-func (g *Glispy) CallFunc(key string, args ...types.Expression) (out types.Expression, err error) {
-	var exp types.Expression
-	if exp, err = g.sc.Get(types.Symbol(key)); err != nil {
+func (g *Glispy) CallFunc(key string, args ...types.Atom) (out types.Expression, err error) {
+	var (
+		exp types.Expression
+		ok  bool
+	)
+
+	if exp, ok = g.sc.Get(types.Symbol(key)); !ok {
+		err = fmt.Errorf("key of \"%s\" not found", key)
 		return
 	}
 
-	var (
-		fn types.Function
-		ok bool
-	)
-
+	var fn types.Function
 	if fn, ok = exp.(types.Function); !ok {
 		err = fmt.Errorf("invalid type, cannot assert %T as function", exp)
 		return
