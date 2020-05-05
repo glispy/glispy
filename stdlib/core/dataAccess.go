@@ -155,7 +155,7 @@ func getReflectValueFromAtom(target types.Atom, key string) (exp types.Expressio
 	switch kind {
 	case reflect.Struct:
 		c := rl.GetOrCreate(rTarget.Type())
-		rval = rTarget.Field(c[key])
+		rval = rTarget.Field(c[key].Index)
 	case reflect.Map:
 		rval = rTarget.MapIndex(reflect.ValueOf(key))
 
@@ -199,20 +199,19 @@ func setReflectValueToAtom(target types.Atom, key string, value types.Atom) (exp
 		}
 
 		reflectedValue := reflect.ValueOf(value)
-		targetField := rTarget.Field(field)
 
 		// Check to see if the value is convertable to the field's type
-		if !reflectedValue.Type().ConvertibleTo(targetField.Type()) {
+		if !reflectedValue.Type().ConvertibleTo(field.Type) {
 			// Value is not convertable to field's type, return
-			err = fmt.Errorf("type of %v is not convertable to %v", reflectedValue.Type(), targetField.Type())
+			err = fmt.Errorf("type of %v is not convertable to %v", reflectedValue.Type(), field.Type)
 			return
 		}
 
 		// Convert value to field's type
-		convertedVal := reflectedValue.Convert(targetField.Type())
+		convertedVal := reflectedValue.Convert(field.Type)
 
 		// Set target field as the converted value
-		targetField.Set(convertedVal)
+		rTarget.Field(field.Index).Set(convertedVal)
 
 	case reflect.Map:
 		rTarget.SetMapIndex(reflect.ValueOf(key), reflect.ValueOf(value))
@@ -252,20 +251,17 @@ func removeReflectValueFromAtom(target types.Atom, key string) (ok bool, err err
 
 		c := rl.GetOrCreate(rTarget.Type())
 
-		var field int
-		field, ok = c[key]
-		if !ok {
+		field, exists := c[key]
+		if !exists {
 			return
 		}
 
-		// Set field value
-		fieldValue := rTarget.Field(field)
-
 		// Get zero value of type
-		zeroValue := reflect.Zero(fieldValue.Type())
+		zeroValue := reflect.Zero(field.Type)
 
 		// Set target field to zero value
-		rTarget.Field(field).Set(zeroValue)
+		rTarget.Field(field.Index).Set(zeroValue)
+
 	case reflect.Map:
 		// Set field value
 		fieldValue := rTarget.MapIndex(reflect.ValueOf(key))
