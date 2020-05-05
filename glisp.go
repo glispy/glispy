@@ -23,8 +23,9 @@ func New() (g Glisp) {
 	setFunc(s, ">", core.GreaterThan)
 	setFunc(s, "<", core.LessThan)
 	setFunc(s, "make-hash-map", core.MakeHashMap)
-	setFunc(s, "set-hash-value", core.SetHashValue)
-	setFunc(s, "get-hash-value", core.GetHashValue)
+	setFunc(s, "get-value", core.GetValue)
+	setFunc(s, "set-value", core.SetValue)
+	setFunc(s, "remove-value", core.RemoveValue)
 	return NewWithScope(s)
 }
 
