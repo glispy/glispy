@@ -1,6 +1,7 @@
 package glispy
 
 import (
+	"fmt"
 	"io/ioutil"
 
 	"github.com/glispy/glispy/eval"
@@ -74,4 +75,24 @@ func (g *Glispy) EvalFile(filename string) (out types.Expression, err error) {
 // SetFunc allows Go funcs to be set as lisp funcs
 func (g *Glispy) SetFunc(key string, fn types.Function) {
 	setFunc(g.sc, key, fn)
+}
+
+// CallFunc will call a func within the global scope
+func (g *Glispy) CallFunc(key string, args ...types.Expression) (out types.Expression, err error) {
+	var exp types.Expression
+	if exp, err = g.sc.Get(types.Symbol(key)); err != nil {
+		return
+	}
+
+	var (
+		fn types.Function
+		ok bool
+	)
+
+	if fn, ok = exp.(types.Function); !ok {
+		err = fmt.Errorf("invalid type, cannot assert %T as function", exp)
+		return
+	}
+
+	return fn(g.sc, types.List(args))
 }
