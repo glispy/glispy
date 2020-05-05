@@ -1,6 +1,6 @@
 package scope
 
-import "github.com/itsmontoya/glisp/types"
+import "github.com/glispy/glispy/types"
 
 // NewFunc will return a new function scope
 func NewFunc(parent Scope) *Func {

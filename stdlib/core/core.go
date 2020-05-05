@@ -1,14 +1,14 @@
 package core
 
 import (
-	"github.com/hatchify/scribe"
-	"github.com/itsmontoya/glisp/eval"
-	gmath "github.com/itsmontoya/glisp/stdlib/math"
-	gstrings "github.com/itsmontoya/glisp/stdlib/strings"
+	gmath "github.com/glispy/glispy/stdlib/math"
+	gstrings "github.com/glispy/glispy/stdlib/strings"
 
-	"github.com/itsmontoya/glisp/common"
-	"github.com/itsmontoya/glisp/scope"
-	"github.com/itsmontoya/glisp/types"
+	"github.com/glispy/glispy/common"
+	"github.com/glispy/glispy/eval"
+	"github.com/glispy/glispy/scope"
+	"github.com/glispy/glispy/types"
+	"github.com/hatchify/scribe"
 )
 
 var out = scribe.New("Glisp")
@@ -20,7 +20,7 @@ func Println(sc types.Scope, args types.List) (_ types.Expression, err error) {
 		return
 	}
 
-	out.Notificationf("Glisp: %v", exp)
+	out.Notificationf("Glispy: %v", exp)
 	return
 }
 

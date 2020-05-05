@@ -3,8 +3,8 @@ package eval
 import (
 	"fmt"
 
-	"github.com/itsmontoya/glisp/common"
-	"github.com/itsmontoya/glisp/types"
+	"github.com/glispy/glispy/common"
+	"github.com/glispy/glispy/types"
 )
 
 const ifSymbol = types.Symbol("if")
@@ -111,15 +111,19 @@ func handleFn(sc types.Scope, l types.List) (out types.Expression, err error) {
 		ok   bool
 	)
 
-	switch l[0] {
+	switch {
 	// We check to see if the symbol is define or defun. If either, we do not want to replace the values
-	case types.Symbol("define"), types.Symbol("defun"):
+	case isSymbolReferencingFunc(l[0]):
+		if l, err = replaceSymbols(sc, l, 2); err != nil {
+			return
+		}
+
 		if ref, err = tryHandleSymbol(sc, l[0]); err != nil {
 			return
 		}
 
 	default:
-		if l, err = replaceSymbols(sc, l); err != nil {
+		if l, err = replaceSymbols(sc, l, 0); err != nil {
 			return
 		}
 
@@ -135,10 +139,29 @@ func handleFn(sc types.Scope, l types.List) (out types.Expression, err error) {
 	return fn(sc, args)
 }
 
-func replaceSymbols(sc types.Scope, l types.List) (out types.List, err error) {
+func isSymbolReferencingFunc(symbol types.Atom) (ok bool) {
+	switch symbol {
+	case types.Symbol("define"):
+	case types.Symbol("defun"):
+	case types.Symbol("make-hash-map"):
+
+	default:
+		// The provided symbol is not a symbol referencing func, return false
+		return false
+	}
+
+	return true
+}
+
+func replaceSymbols(sc types.Scope, l types.List, startAt int) (out types.List, err error) {
 	var ok bool
 	out = make(types.List, 0, len(l))
-	for _, atom := range l {
+	for i, atom := range l {
+		if i < startAt {
+			out = append(out, atom)
+			continue
+		}
+
 		var sym types.Symbol
 		if sym, ok = atom.(types.Symbol); !ok {
 			out = append(out, atom)
@@ -159,33 +182,33 @@ func replaceSymbols(sc types.Scope, l types.List) (out types.List, err error) {
 /*
 Delete this if everything works
 
-func handleFn(sc types.Scope, l types.List) (out types.Expression, err error) {
-	var (
-		sym  types.Symbol
-		ref  types.Expression
-		fn   Func
-		args types.List
-		ok   bool
-	)
 
-	if sym, ok = l[0].(types.Symbol); !ok {
-		err = common.ErrExpectedSymbol
-		return
+func replaceSymbols(sc types.Scope, l types.List, startAt int) (out types.List, err error) {
+	var ok bool
+	out = make(types.List, 0, len(l))
+	for i, atom := range l {
+		if i < startAt {
+			out = append(out, atom)
+			continue
+		}
+
+		var exp types.Expression
+		switch n:= atom.(type) {
+		case types.Symbol:
+			if exp, err = handleSymbol(sc, n); err != nil {
+				return
+			}
+		case types.Function:
+			n(sc, )
+		default:
+			exp = atom
+		}
+
+
+		out = append(out, exp)
 	}
 
-	if ref, ok = sc.Get(sym); !ok {
-		err = common.ErrKeyNotFound
-		return
-	}
-
-	if fn, ok = ref.(Func); !ok {
-		err = common.ErrExpectedFn
-		return
-	}
-
-	args = l[1:]
-
-	return fn(sc, args)
+	return
 }
 
 */

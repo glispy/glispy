@@ -1,8 +1,8 @@
 package strings
 
 import (
-	"github.com/itsmontoya/glisp/eval"
-	"github.com/itsmontoya/glisp/types"
+	"github.com/glispy/glispy/eval"
+	"github.com/glispy/glispy/types"
 )
 
 // Add will add a series of strings

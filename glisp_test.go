@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/itsmontoya/glisp/tokens"
-	"github.com/itsmontoya/glisp/types"
+	"github.com/glispy/glispy/tokens"
+	"github.com/glispy/glispy/types"
 	"github.com/janne/go-lisp/lisp"
 )
 
@@ -73,6 +73,52 @@ func TestGlispAdd(t *testing.T) {
 	if val.(types.Number) != 11 {
 		t.Fatalf("invalid value, expected %v and received %v", 11, val)
 	}
+}
+
+func TestGetSetValue_map(t *testing.T) {
+	var (
+		val types.Expression
+		err error
+	)
+
+	g := New()
+
+	if val, err = g.EvalString(`(
+		(make-hash-map foo)
+		(set-value foo "bar" 1337)
+		(get-value foo "bar")
+	)`); err != nil {
+		t.Fatal(err)
+	}
+
+	fmt.Println("Value", val)
+}
+
+func TestGetSetValue_struct(t *testing.T) {
+	var (
+		val types.Expression
+		err error
+	)
+
+	type S struct {
+		A string  `glispy:"a"`
+		B float32 `glispy:"b"`
+		C string
+	}
+
+	g := New()
+	s := S{}
+
+	g.sc.Put(types.Symbol("foo"), &s)
+	if val, err = g.EvalString(`(
+		(set-value foo "a" "hello world")
+		(set-value foo "b" 1337)
+		(get-value foo "a")
+	)`); err != nil {
+		t.Fatal(err)
+	}
+
+	fmt.Println("Value", val)
 }
 
 func BenchmarkGlispAdd(b *testing.B) {
