@@ -8,7 +8,6 @@ import (
 	"github.com/glispy/glispy/scope"
 	"github.com/glispy/glispy/stdlib/core"
 	"github.com/glispy/glispy/stdlib/math"
-	"github.com/glispy/glispy/stdlib/net"
 	"github.com/glispy/glispy/tokens"
 	"github.com/glispy/glispy/types"
 )
@@ -29,7 +28,8 @@ func New() (g Glispy) {
 	setFunc(s, "get-value", core.GetValue)
 	setFunc(s, "set-value", core.SetValue)
 	setFunc(s, "remove-value", core.RemoveValue)
-	setFunc(s, "http-get", net.HTTPGetRequest)
+	// TODO: Bring this back when net library has been implemented
+	// setFunc(s, "http-get", net.HTTPGetRequest)
 	return NewWithScope(s)
 }
 
