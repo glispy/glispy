@@ -2,18 +2,16 @@ package glispy
 
 import (
 	"fmt"
+	"strings"
 	"testing"
 
-	"github.com/glispy/glispy/tokens"
+	"github.com/glispy/glispy/reader"
 	"github.com/glispy/glispy/types"
 	"github.com/janne/go-lisp/lisp"
 )
 
 const (
-	//	program = "(begin (define r 10) (* pi (* r r)))"
-
-	program = "(begin (define r 10) (println (* pi (* r r)))))"
-	square  = `(define square (x) (* x x))`
+	square = `(defun square (x) (* x x))`
 )
 
 var (
@@ -23,28 +21,19 @@ var (
 
 func TestGlispy(t *testing.T) {
 	g := New()
-	//tkns := NewTokens(`(begin (define foo "bar") (println foo pi))`)
-	//tkns := tokens.NewTokens(`(if (> 3 2) 11 22)`)
-	tkns := tokens.NewTokens(`(
-	begin 
-		(defun square (x)
-			(* x x)
-		)
-		(println (
-				square (
-					+ 3 3
-				)
+	src := `(
+	(defun square (x)
+		(* x x)
+	)
+	(println (
+			square (
+				+ 3 3
 			)
 		)
-)`)
-	//tkns := NewTokens(`(begin (println ("foo")) (println ("bar")))`)
+	)
+)`
 
-	exp, err := types.NewExpression(&tkns)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	out, err := g.Eval(exp)
+	out, err := g.EvalString(src)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -61,7 +50,7 @@ func TestGlispyDefine(t *testing.T) {
 
 	g := New()
 	src := `(
-	(define (quote x) 1337)
+	(define 'x 1337)
 	(println x)
 )`
 
@@ -76,18 +65,14 @@ func TestGlispyDefine(t *testing.T) {
 
 func TestGlispyAdd(t *testing.T) {
 	var (
-		exp types.Expression
 		val types.Expression
 		err error
 	)
 
 	g := New()
-	tkns := tokens.NewTokens(`(+ 1 3 (+ 2 5))`)
-	if exp, err = types.NewExpression(&tkns); err != nil {
-		t.Fatal(err)
-	}
+	src := `(+ 1 3 (+ 2 5))`
 
-	if val, err = g.Eval(exp); err != nil {
+	if val, err = g.EvalString(src); err != nil {
 		t.Fatal(err)
 	}
 
@@ -105,7 +90,7 @@ func TestGetSetValue_map(t *testing.T) {
 	g := New()
 
 	if val, err = g.EvalString(`(
-		(make-hash-map foo)
+		(make-hash-map 'foo)
 		(set-value foo "bar" 1337)
 		(get-value foo "bar")
 	)`); err != nil {
@@ -148,9 +133,12 @@ func TestHTTPGet(t *testing.T) {
 		err error
 	)
 
+	// Note: This feature isn't yet ready for testing
+	return
+
 	g := New()
 	if val, err = g.EvalString(`(
-	(define resp (http-get "https://cat-fact.herokuapp.com/facts/random"))
+	(define 'resp (http-get "https://cat-fact.herokuapp.com/facts/random"))
 	(get-value resp "text")
 )`); err != nil {
 		t.Fatal(err)
@@ -161,7 +149,6 @@ func TestHTTPGet(t *testing.T) {
 
 func BenchmarkGlispyAdd(b *testing.B) {
 	var (
-		exp types.Expression
 		val types.Expression
 		err error
 	)
@@ -169,12 +156,9 @@ func BenchmarkGlispyAdd(b *testing.B) {
 	g := New()
 
 	for i := 0; i < b.N; i++ {
-		tkns := tokens.NewTokens(`(+ 1 3 (+ 2 5))`)
-		if exp, err = types.NewExpression(&tkns); err != nil {
-			b.Fatal(err)
-		}
+		src := `(+ 1 3 (+ 2 5))`
 
-		if val, err = g.Eval(exp); err != nil {
+		if val, err = g.EvalString(src); err != nil {
 			b.Fatal(err)
 		}
 
@@ -190,31 +174,20 @@ func BenchmarkGlispyAdd(b *testing.B) {
 
 func BenchmarkGlispySquare(b *testing.B) {
 	var (
-		exp  types.Expression
-		val  types.Expression
-		tkns tokens.Tokens
-		err  error
+		val types.Expression
+		err error
 	)
 
 	g := New()
-	tkns = tokens.NewTokens(square)
-	if exp, err = types.NewExpression(&tkns); err != nil {
-		b.Fatal(err)
-	}
 
-	if _, err = g.Eval(exp); err != nil {
+	if _, err = g.EvalString(square); err != nil {
 		b.Fatal(err)
 	}
 
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		tkns = tokens.NewTokens(`(square 3)`)
-		if exp, err = types.NewExpression(&tkns); err != nil {
-			b.Fatal(err)
-		}
-
-		if val, err = g.Eval(exp); err != nil {
+		if val, err = g.EvalString(`(square 3)`); err != nil {
 			b.Fatal(err)
 		}
 
@@ -230,24 +203,19 @@ func BenchmarkGlispySquare(b *testing.B) {
 
 func BenchmarkGlispySquare_PreProcessed(b *testing.B) {
 	var (
-		exp  types.Expression
-		val  types.Expression
-		tkns tokens.Tokens
-		err  error
+		exp types.Expression
+		val types.Expression
+		err error
 	)
 
 	g := New()
-	tkns = tokens.NewTokens(square)
-	if exp, err = types.NewExpression(&tkns); err != nil {
+	if _, err = g.EvalString(square); err != nil {
 		b.Fatal(err)
 	}
 
-	if _, err = g.Eval(exp); err != nil {
-		b.Fatal(err)
-	}
+	r := reader.New(strings.NewReader(`(square 3)`), g.readmacros)
 
-	tkns = tokens.NewTokens(`(square 3)`)
-	if exp, err = types.NewExpression(&tkns); err != nil {
+	if exp, err = r.Read(); err != nil {
 		b.Fatal(err)
 	}
 
@@ -276,11 +244,13 @@ func BenchmarkGlispyAdd_PreProcessed(b *testing.B) {
 	)
 
 	g := New()
-	tkns := tokens.NewTokens(`(+ 1 3 (+ 2 5))`)
+	r := reader.New(strings.NewReader(`(+ 1 3 (+ 2 5))`), g.readmacros)
 
-	if exp, err = types.NewExpression(&tkns); err != nil {
+	if exp, err = r.Read(); err != nil {
 		b.Fatal(err)
 	}
+
+	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
 		if val, err = g.Eval(exp); err != nil {
