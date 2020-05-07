@@ -53,7 +53,6 @@ func tryHandleSymbol(sc types.Scope, a types.Atom) (out types.Expression, err er
 }
 
 func handleList(sc types.Scope, l types.List) (out types.Expression, err error) {
-	// TODO: Change this entire func to an interating loop approach
 	var (
 		list types.List
 		ok   bool
@@ -114,9 +113,10 @@ func handleFn(sc types.Scope, l types.List) (out types.Expression, err error) {
 	switch {
 	// We check to see if the symbol is define or defun. If either, we do not want to replace the values
 	case isSpecialOperator(l[0]):
-		if l, err = replaceSymbols(sc, l, 2); err != nil {
-			return
-		}
+		// // TODO: Ensure this isn't needed
+		// if l, err = replaceSymbols(sc, l, 200); err != nil {
+		//	return
+		// }
 
 		if ref, err = tryHandleSymbol(sc, l[0]); err != nil {
 			return
@@ -142,6 +142,7 @@ func handleFn(sc types.Scope, l types.List) (out types.Expression, err error) {
 func isSpecialOperator(symbol types.Atom) (ok bool) {
 	switch symbol {
 	case types.Symbol("quote"):
+	case types.Symbol("defun"):
 
 	default:
 		// The provided symbol is not a symbol referencing func, return false
