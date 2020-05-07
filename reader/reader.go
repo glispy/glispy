@@ -128,6 +128,19 @@ func (r *Reader) ReadChar() (char rune, err error) {
 	return
 }
 
+// ReadNextNonWhitespaceChar will read the next non-whitespace single character
+func (r *Reader) ReadNextNonWhitespaceChar() (char rune, err error) {
+	for {
+		if char, err = r.ReadChar(); err != nil {
+			return
+		}
+
+		if !isWhitespace(char) {
+			return
+		}
+	}
+}
+
 // ReadToken will read a single token
 func (r *Reader) ReadToken() (token Token, err error) {
 	var (
@@ -161,16 +174,38 @@ func (r *Reader) ReadToken() (token Token, err error) {
 	return
 }
 
+func (r *Reader) performReadMacro() (exp types.Expression, ok bool, err error) {
+	var char rune
+	if char, err = r.ReadChar(); err != nil {
+		return
+	}
+
+	switch char {
+	case '\'':
+		if exp, err = quote(r, '\''); err != nil {
+			return
+		}
+
+	default:
+		r.unreadState = true
+		return
+	}
+
+	ok = true
+	return
+}
+
 func (r *Reader) Read() (exp types.Expression, err error) {
+	var ok bool
+	if exp, ok, err = r.performReadMacro(); ok || err != nil {
+		return
+	}
+
 	var token Token
 	if token, err = r.ReadToken(); err != nil {
 		return
 	}
 
-	return r.newExpression(token)
-}
-
-func (r *Reader) newExpression(token Token) (e types.Expression, err error) {
 	switch token {
 	case "(":
 		return r.newList()
@@ -179,25 +214,22 @@ func (r *Reader) newExpression(token Token) (e types.Expression, err error) {
 		return
 
 	default:
-
-		// Reader macro time
-		switch token[0] {
-		case '\'':
-
-		}
-
 		return r.newAtom(token)
 	}
 }
 
 func (r *Reader) newList() (l types.List, err error) {
+	fmt.Println("Starting list")
 	for {
 		var char rune
-		if char, err = r.ReadChar(); err != nil {
+		if char, err = r.ReadNextNonWhitespaceChar(); err != nil {
 			return
 		}
 
+		fmt.Println("Peek?", string(char))
+
 		if char == ')' {
+			fmt.Println("Closing list!")
 			return
 		}
 
@@ -269,3 +301,15 @@ var symbolRegExp = regexp.MustCompile(`[^a-zA-Z_<>+*-]`)
 
 // Token is a basic token type
 type Token string
+
+func quote(r *Reader, char rune) (exp types.Expression, err error) {
+	var token Token
+	if token, err = r.ReadToken(); err != nil {
+		return
+	}
+
+	var l types.List
+	l = append(l, types.Symbol("quote"), types.Symbol(token))
+	exp = l
+	return
+}
