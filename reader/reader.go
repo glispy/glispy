@@ -2,7 +2,6 @@ package reader
 
 import (
 	"bufio"
-	"fmt"
 	"io"
 	"os"
 	"regexp"
@@ -219,17 +218,13 @@ func (r *Reader) Read() (exp types.Expression, err error) {
 }
 
 func (r *Reader) newList() (l types.List, err error) {
-	fmt.Println("Starting list")
 	for {
 		var char rune
 		if char, err = r.ReadNextNonWhitespaceChar(); err != nil {
 			return
 		}
 
-		fmt.Println("Peek?", string(char))
-
 		if char == ')' {
-			fmt.Println("Closing list!")
 			return
 		}
 
@@ -245,7 +240,6 @@ func (r *Reader) newList() (l types.List, err error) {
 }
 
 func (r *Reader) newAtom(token Token) (a types.Atom, err error) {
-	fmt.Println("Oh?", token)
 	if a, err = r.newSymbol(token); err == nil {
 		return
 	}
