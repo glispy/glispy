@@ -13,6 +13,17 @@ import (
 
 var out = scribe.New("Glispy")
 
+// Quote will quote a value
+func Quote(sc types.Scope, args types.List) (out types.Expression, err error) {
+	if len(args) < 1 {
+		err = common.ErrInvalidArgs
+		return
+	}
+
+	out = args[0]
+	return
+}
+
 // Println will print a line to stdout
 func Println(sc types.Scope, args types.List) (_ types.Expression, err error) {
 	var exp types.Expression

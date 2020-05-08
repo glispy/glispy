@@ -1,6 +1,8 @@
 package math
 
 import (
+	"math"
+
 	"github.com/glispy/glispy/common"
 	"github.com/glispy/glispy/eval"
 	"github.com/glispy/glispy/types"
@@ -91,5 +93,17 @@ func GreaterThan(sc types.Scope, an types.Number, b types.Atom) (out types.Expre
 		out = "true"
 	}
 
+	return
+}
+
+// Square will return the squared value of the provided number
+func Square(sc types.Scope, args types.List) (out types.Expression, err error) {
+	var val types.Number
+	if val, err = args.GetNumber(0); err != nil {
+		return
+	}
+
+	sqrt := math.Sqrt(float64(val))
+	out = types.Number(sqrt)
 	return
 }

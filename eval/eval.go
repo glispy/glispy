@@ -53,7 +53,6 @@ func tryHandleSymbol(sc types.Scope, a types.Atom) (out types.Expression, err er
 }
 
 func handleList(sc types.Scope, l types.List) (out types.Expression, err error) {
-	// TODO: Change this entire func to an interating loop approach
 	var (
 		list types.List
 		ok   bool
@@ -113,10 +112,11 @@ func handleFn(sc types.Scope, l types.List) (out types.Expression, err error) {
 
 	switch {
 	// We check to see if the symbol is define or defun. If either, we do not want to replace the values
-	case isSymbolReferencingFunc(l[0]):
-		if l, err = replaceSymbols(sc, l, 2); err != nil {
-			return
-		}
+	case isSpecialOperator(l[0]):
+		// // TODO: Ensure this isn't needed
+		// if l, err = replaceSymbols(sc, l, 200); err != nil {
+		//	return
+		// }
 
 		if ref, err = tryHandleSymbol(sc, l[0]); err != nil {
 			return
@@ -139,11 +139,10 @@ func handleFn(sc types.Scope, l types.List) (out types.Expression, err error) {
 	return fn(sc, args)
 }
 
-func isSymbolReferencingFunc(symbol types.Atom) (ok bool) {
+func isSpecialOperator(symbol types.Atom) (ok bool) {
 	switch symbol {
-	case types.Symbol("define"):
+	case types.Symbol("quote"):
 	case types.Symbol("defun"):
-	case types.Symbol("make-hash-map"):
 
 	default:
 		// The provided symbol is not a symbol referencing func, return false
@@ -154,7 +153,6 @@ func isSymbolReferencingFunc(symbol types.Atom) (ok bool) {
 }
 
 func replaceSymbols(sc types.Scope, l types.List, startAt int) (out types.List, err error) {
-	var ok bool
 	out = make(types.List, 0, len(l))
 	for i, atom := range l {
 		if i < startAt {
@@ -162,15 +160,20 @@ func replaceSymbols(sc types.Scope, l types.List, startAt int) (out types.List, 
 			continue
 		}
 
-		var sym types.Symbol
-		if sym, ok = atom.(types.Symbol); !ok {
-			out = append(out, atom)
-			continue
-		}
-
 		var exp types.Expression
-		if exp, err = handleSymbol(sc, sym); err != nil {
-			return
+		switch n := atom.(type) {
+		case types.Symbol:
+			if exp, err = handleSymbol(sc, n); err != nil {
+				return
+			}
+
+		case types.List:
+			if exp, err = handleList(sc, n); err != nil {
+				return
+			}
+
+		default:
+			exp = atom
 		}
 
 		out = append(out, exp)

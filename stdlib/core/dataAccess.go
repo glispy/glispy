@@ -146,11 +146,6 @@ func getReflectValueFromAtom(target types.Atom, key string) (exp types.Expressio
 		kind = rTarget.Kind()
 	}
 
-	if !rTarget.CanSet() {
-		err = fmt.Errorf("type of %v cannot be set", kind)
-		return
-	}
-
 	var rval reflect.Value
 	switch kind {
 	case reflect.Struct:
