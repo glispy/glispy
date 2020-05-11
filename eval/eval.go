@@ -143,6 +143,7 @@ func isSpecialOperator(symbol types.Atom) (ok bool) {
 	switch symbol {
 	case types.Symbol("quote"):
 	case types.Symbol("defun"):
+	case types.Symbol("defmacro"):
 
 	default:
 		// The provided symbol is not a symbol referencing func, return false
@@ -155,7 +156,7 @@ func isSpecialOperator(symbol types.Atom) (ok bool) {
 func replaceSymbols(sc types.Scope, l types.List, startAt int) (out types.List, err error) {
 	out = make(types.List, 0, len(l))
 	for i, atom := range l {
-		if i < startAt {
+		if startAt == -1 || i < startAt {
 			out = append(out, atom)
 			continue
 		}
