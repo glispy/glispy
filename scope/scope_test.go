@@ -13,7 +13,7 @@ const (
 )
 
 func TestScope(t *testing.T) {
-	var s Scope
+	var s types.Scope
 	root := NewRoot()
 	s = NewFunc(root)
 

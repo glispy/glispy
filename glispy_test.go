@@ -127,6 +127,33 @@ func TestGetSetValue_struct(t *testing.T) {
 	fmt.Println("Value", val)
 }
 
+func TestGlispyMacro(t *testing.T) {
+	var err error
+	g := New()
+
+	if _, err = g.EvalString(`(
+		defmacro speak (x) (
+			println x
+		)
+	)`); err != nil {
+		t.Fatal(err)
+	}
+
+	var compiled types.Expression
+	if compiled, err = g.CompileString(`(
+			speak 26
+		)`); err != nil {
+		t.Fatal(err)
+	}
+
+	var val types.Expression
+	if val, err = g.Eval(compiled); err != nil {
+		t.Fatal(err)
+	}
+
+	fmt.Println("Value", val)
+}
+
 func TestHTTPGet(t *testing.T) {
 	var (
 		val types.Expression
@@ -213,7 +240,7 @@ func BenchmarkGlispySquare_PreProcessed(b *testing.B) {
 		b.Fatal(err)
 	}
 
-	r := reader.New(strings.NewReader(`(square 3)`), g.readmacros)
+	r := reader.New(strings.NewReader(`(square 3)`), g.readermacros)
 
 	if exp, err = r.Read(); err != nil {
 		b.Fatal(err)
@@ -244,7 +271,7 @@ func BenchmarkGlispyAdd_PreProcessed(b *testing.B) {
 	)
 
 	g := New()
-	r := reader.New(strings.NewReader(`(+ 1 3 (+ 2 5))`), g.readmacros)
+	r := reader.New(strings.NewReader(`(+ 1 3 (+ 2 5))`), g.readermacros)
 
 	if exp, err = r.Read(); err != nil {
 		b.Fatal(err)

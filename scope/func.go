@@ -3,7 +3,7 @@ package scope
 import "github.com/glispy/glispy/types"
 
 // NewFunc will return a new function scope
-func NewFunc(parent Scope) *Func {
+func NewFunc(parent types.Scope) *Func {
 	var f Func
 	f.p = parent
 	f.d = make(types.Dict)
@@ -13,7 +13,7 @@ func NewFunc(parent Scope) *Func {
 // Func represents a function scope
 type Func struct {
 	// Parent scope
-	p Scope
+	p types.Scope
 	// Local scope
 	d types.Dict
 }
@@ -45,4 +45,18 @@ func (f *Func) PutRoot(key types.Symbol, in types.Expression) {
 
 	f.p.PutRoot(key, in)
 	return
+}
+
+// Root will return the root Scope
+func (f *Func) Root() (root types.Scope) {
+	if f.p == nil {
+		return f
+	}
+
+	return f.p.Root()
+}
+
+// Len will return the length of the local scope
+func (f *Func) Len() int {
+	return len(f.d)
 }
