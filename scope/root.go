@@ -29,3 +29,13 @@ func (r *Root) Put(key types.Symbol, exp types.Expression) {
 func (r *Root) PutRoot(key types.Symbol, exp types.Expression) {
 	r.d[key] = exp
 }
+
+// Root will return the root Scope
+func (r *Root) Root() (root types.Scope) {
+	return r
+}
+
+// Len will return the length of the local scope
+func (r *Root) Len() int {
+	return len(r.d)
+}
