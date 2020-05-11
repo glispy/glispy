@@ -26,12 +26,7 @@ func Quote(sc types.Scope, args types.List) (out types.Expression, err error) {
 
 // Println will print a line to stdout
 func Println(sc types.Scope, args types.List) (_ types.Expression, err error) {
-	var exp types.Expression
-	if exp, err = eval.Eval(sc, args[0]); err != nil {
-		return
-	}
-
-	out.Notificationf("Glispyy: %v", exp)
+	out.Notificationf("%+v", args)
 	return
 }
 
