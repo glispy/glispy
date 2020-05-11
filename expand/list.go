@@ -1,13 +1,10 @@
 package expand
 
 import (
-	"fmt"
-
 	"github.com/glispy/glispy/types"
 )
 
 func expandList(sc types.Scope, l types.List) (out types.Expression, err error) {
-	fmt.Println("Expanding list", l)
 	if len(l) == 0 {
 		out = l
 		return

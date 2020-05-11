@@ -1,8 +1,6 @@
 package expand
 
 import (
-	"fmt"
-
 	"github.com/glispy/glispy/common"
 	"github.com/glispy/glispy/scope"
 	"github.com/glispy/glispy/types"
@@ -37,7 +35,6 @@ func expandFunc(sc types.Scope, l types.List) (out types.Expression, err error) 
 	args = l[1:]
 
 	if ref, ok = sc.Get(sym); !ok {
-		fmt.Println("cant find", sym)
 		return
 	}
 
@@ -64,8 +61,6 @@ func replaceValues(s types.Scope, body types.List) (out types.Expression, err er
 		list types.List
 		ok   bool
 	)
-
-	fmt.Println("Replacing values", s, body)
 
 	for _, exp := range body {
 		switch n := exp.(type) {
