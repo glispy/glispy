@@ -12,6 +12,7 @@ import (
 	"github.com/glispy/glispy/scope"
 	"github.com/glispy/glispy/stdlib/core"
 	"github.com/glispy/glispy/stdlib/math"
+	"github.com/glispy/glispy/stdlib/net"
 	"github.com/glispy/glispy/types"
 )
 
@@ -34,8 +35,7 @@ func New() (g Glispy) {
 	setFunc(s, "remove-value", core.RemoveValue)
 	setFunc(s, "set-macro-character", g.setReaderMacro)
 	setFunc(s, "defmacro", g.setMacro)
-	// TODO: Bring this back when net library has been implemented
-	// setFunc(s, "http-get", net.HTTPGetRequest)
+	setFunc(s, "http-get", net.HTTPGetRequest)
 	return NewWithScope(s)
 }
 
