@@ -143,36 +143,7 @@ func Defun(sc types.Scope, args types.List) (_ types.Expression, err error) {
 		return
 	}
 
-	fn := func(fargs types.List, exp types.Expression) types.Function {
-		return func(sc types.Scope, args types.List) (out types.Expression, err error) {
-			if len(args) != len(fargs) {
-				err = common.ErrInvalidArgs
-				return
-			}
-
-			fsc := scope.NewFunc(sc)
-			for i, arg := range args {
-				var (
-					sym types.Symbol
-					ok  bool
-				)
-
-				if sym, ok = fargs[i].(types.Symbol); !ok {
-					err = common.ErrExpectedSymbol
-					return
-				}
-
-				fsc.Put(sym, arg)
-			}
-
-			if out, err = eval.Eval(fsc, exp); err != nil {
-				return
-			}
-
-			return
-		}
-	}(fargs, exp)
-
+	fn := NewFunc(fargs, exp)
 	sc.Put(sym, fn)
 	return
 }
@@ -200,4 +171,35 @@ func Begin(sc types.Scope, args types.List) (_ types.Expression, err error) {
 	}
 
 	return
+}
+
+// NewFunc will return a new func
+func NewFunc(fargs types.List, exp types.Expression) (fn types.Function) {
+	return func(sc types.Scope, args types.List) (out types.Expression, err error) {
+		if len(args) != len(fargs) {
+			err = common.ErrInvalidArgs
+			return
+		}
+
+		fsc := scope.NewFunc(sc)
+		for i, arg := range args {
+			var (
+				sym types.Symbol
+				ok  bool
+			)
+
+			if sym, ok = fargs[i].(types.Symbol); !ok {
+				err = common.ErrExpectedSymbol
+				return
+			}
+
+			fsc.Put(sym, arg)
+		}
+
+		if out, err = eval.Eval(fsc, exp); err != nil {
+			return
+		}
+
+		return
+	}
 }
