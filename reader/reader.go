@@ -240,6 +240,10 @@ func (r *Reader) newList() (l types.List, err error) {
 }
 
 func (r *Reader) newAtom(token Token) (a types.Atom, err error) {
+	if a, err = r.newNil(token); err == nil {
+		return
+	}
+
 	if a, err = r.newSymbol(token); err == nil {
 		return
 	}
@@ -253,6 +257,15 @@ func (r *Reader) newAtom(token Token) (a types.Atom, err error) {
 	}
 
 	err = ErrInvalidAtom
+	return
+}
+
+func (r *Reader) newNil(t Token) (n types.Nil, err error) {
+	if t != "nil" {
+		err = types.ErrInvalidNil
+		return
+	}
+
 	return
 }
 
