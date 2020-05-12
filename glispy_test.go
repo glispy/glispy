@@ -162,7 +162,7 @@ func TestHTTPGet(t *testing.T) {
 
 	g := New()
 	if val, err = g.EvalString(`(
-	(define 'resp (http-get "https://cat-fact.herokuapp.com/facts/random"))
+	(define 'resp (http-get nil "https://cat-fact.herokuapp.com/facts/random"))
 	(get-value resp "text")
 )`); err != nil {
 		t.Fatal(err)
