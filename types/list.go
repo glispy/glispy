@@ -185,6 +185,19 @@ func (l List) GetValue(i int, value interface{}) (err error) {
 		}
 
 		*n = exp
+
+	case *Atom:
+		var exp Atom
+		if exp, err = l.GetAtom(i); err != nil {
+			err = fmt.Errorf("error getting value #%d: %v", i, err)
+			return
+		}
+
+		*n = exp
+
+	default:
+		err = fmt.Errorf("error getting value #%d: type of %T not supported", i, value)
+		return
 	}
 
 	return
