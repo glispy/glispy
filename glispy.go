@@ -23,6 +23,7 @@ func New() (g Glispy) {
 	setFunc(s, "define", core.Define)
 	setFunc(s, "defun", core.Defun)
 	setFunc(s, "begin", core.Begin)
+	setFunc(s, "method", core.Method)
 	setFunc(s, "println", core.Println)
 	setFunc(s, "+", core.Add)
 	setFunc(s, "*", math.Multiply)
