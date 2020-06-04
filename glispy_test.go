@@ -154,6 +154,29 @@ func TestGlispyMacro(t *testing.T) {
 	fmt.Println("Value", val)
 }
 
+func TestGlispyMacro_shrug(t *testing.T) {
+	var err error
+	g := New()
+
+	if _, err = g.EvalString(`(defmacro shrug () ("¯\_(ツ)_/¯"))`); err != nil {
+		t.Fatal(err)
+	}
+
+	var compiled types.Expression
+	if compiled, err = g.CompileString(`(println shrug)`); err != nil {
+		t.Fatal(err)
+	}
+
+	fmt.Println("Compiled", compiled)
+
+	var val types.Expression
+	if val, err = g.Eval(compiled); err != nil {
+		t.Fatal(err)
+	}
+
+	fmt.Println("Value", val)
+}
+
 func TestHTTPGet(t *testing.T) {
 	var (
 		val types.Expression
