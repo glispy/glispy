@@ -33,6 +33,8 @@ func New() (g Glispy) {
 	setFunc(s, "make-hash-map", core.MakeHashMap)
 	setFunc(s, "get-value", core.GetValue)
 	setFunc(s, "set-value", core.SetValue)
+	setFunc(s, "get-index-value", core.GetIndexValue)
+	setFunc(s, "set-index-value", core.SetIndexValue)
 	setFunc(s, "remove-value", core.RemoveValue)
 	setFunc(s, "set-macro-character", g.setReaderMacro)
 	setFunc(s, "defmacro", g.setMacro)
