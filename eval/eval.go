@@ -130,6 +130,8 @@ func handleFn(sc types.Scope, l types.List) (out types.Expression, err error) {
 		ref = l[0]
 	}
 
+	// TODO: Figure out how to step lists from being processed after being quoted
+	fmt.Printf("REF? %+v / %T / %v\n", ref, ref, l[1:])
 	if fn, ok = ref.(types.Function); !ok {
 		err = common.ErrExpectedFn
 		return
