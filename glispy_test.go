@@ -136,7 +136,7 @@ func TestGetIndexValue(t *testing.T) {
 	g := New()
 
 	if val, err = g.EvalString(`(
-		(define 'foo '(1 2 3))
+		define 'foo '(1 2 3)
 	)`); err != nil {
 		t.Fatal(err)
 	}
