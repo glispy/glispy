@@ -11,10 +11,22 @@ import (
 
 func TestReader_Read(t *testing.T) {
 	var err error
-	src := `(
-	define 'foo "bar"
-)`
+	src := `(define 'foo "bar")`
 
+	sc := scope.NewRoot()
+	r := New(strings.NewReader(src), sc)
+
+	var exp types.Expression
+	if exp, err = r.Read(); err != nil {
+		t.Fatal(err)
+	}
+
+	fmt.Println("EXP!", exp)
+}
+
+func TestReader_readermacro_method(t *testing.T) {
+	var err error
+	src := `(define 'resp (:req.Get "/facts/random"))`
 	sc := scope.NewRoot()
 	r := New(strings.NewReader(src), sc)
 

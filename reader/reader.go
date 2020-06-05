@@ -2,10 +2,12 @@ package reader
 
 import (
 	"bufio"
+	"fmt"
 	"io"
 	"os"
 	"regexp"
 	"strconv"
+	"strings"
 
 	"github.com/Hatch1fy/errors"
 	"github.com/glispy/glispy/common"
@@ -181,7 +183,12 @@ func (r *Reader) performReadMacro() (exp types.Expression, ok bool, err error) {
 
 	switch char {
 	case '\'':
-		if exp, err = quote(r, '\''); err != nil {
+		if exp, err = quote(r, char); err != nil {
+			return
+		}
+
+	case ':':
+		if exp, err = method(r, char); err != nil {
 			return
 		}
 
@@ -207,7 +214,8 @@ func (r *Reader) Read() (exp types.Expression, err error) {
 
 	switch token {
 	case "(":
-		return r.newList()
+		exp, err = r.newList()
+		return
 	case ")":
 		err = common.ErrUnexpectedCloseParens
 		return
@@ -218,6 +226,11 @@ func (r *Reader) Read() (exp types.Expression, err error) {
 }
 
 func (r *Reader) newList() (l types.List, err error) {
+	return r.appendList(nil)
+}
+
+func (r *Reader) appendList(in types.List) (l types.List, err error) {
+	l = in
 	for {
 		var char rune
 		if char, err = r.ReadNextNonWhitespaceChar(); err != nil {
@@ -318,5 +331,32 @@ func quote(r *Reader, char rune) (exp types.Expression, err error) {
 	var l types.List
 	l = append(l, types.Symbol("quote"), types.Symbol(token))
 	exp = l
+	return
+}
+
+func method(r *Reader, char rune) (exp types.Expression, err error) {
+	var token Token
+	if token, err = r.ReadToken(); err != nil {
+		return
+	}
+
+	spl := strings.SplitN(string(token), ".", 2)
+	if len(spl) == 1 {
+		err = fmt.Errorf("expected a struct reference and method call, received \"%s\"", token)
+		return
+	}
+
+	var l types.List
+	l = append(l, types.Symbol("method"))
+	l = append(l, types.Symbol(spl[0]))
+	l = append(l, types.String(spl[1]))
+
+	if l, err = r.appendList(l); err != nil {
+		err = fmt.Errorf("error appending list:%v", err)
+		return
+	}
+
+	exp = l
+	r.unreadState = true
 	return
 }
