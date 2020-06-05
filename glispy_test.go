@@ -127,6 +127,23 @@ func TestGetSetValue_struct(t *testing.T) {
 	fmt.Println("Value", val)
 }
 
+func TestGetIndexValue(t *testing.T) {
+	var (
+		val types.Expression
+		err error
+	)
+
+	g := New()
+
+	if val, err = g.EvalString(`(
+		(define 'foo '(1 2 3))
+	)`); err != nil {
+		t.Fatal(err)
+	}
+
+	fmt.Println("Value", val)
+}
+
 func TestGlispyMacro(t *testing.T) {
 	var err error
 	g := New()
