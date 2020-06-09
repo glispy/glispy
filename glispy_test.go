@@ -268,6 +268,22 @@ func TestEndWithValue(t *testing.T) {
 	fmt.Println("Value", val)
 }
 
+func TestIfStatement(t *testing.T) {
+	var (
+		val types.Expression
+		err error
+	)
+
+	g := New()
+
+	if val, err = g.EvalString(`(
+		(if (> 0 1) (println "no") (println "yes"))
+	)`); err != nil {
+		t.Fatal(err)
+	}
+
+	fmt.Println("Value", val)
+}
 func BenchmarkGlispyAdd(b *testing.B) {
 	var (
 		val types.Expression
