@@ -71,7 +71,7 @@ func Multiply(sc types.Scope, args types.List) (out types.Expression, err error)
 // LessThan will return if a is less than b
 func LessThan(sc types.Scope, an types.Number, b types.Atom) (out types.Expression, err error) {
 	var bn types.Number
-	if bn, err = eval.GetNumber(sc, b); err != nil {
+	if bn, err = types.ToNumber(b); err != nil {
 		return
 	}
 
@@ -85,7 +85,7 @@ func LessThan(sc types.Scope, an types.Number, b types.Atom) (out types.Expressi
 // GreaterThan will return if a is greater than b
 func GreaterThan(sc types.Scope, an types.Number, b types.Atom) (out types.Expression, err error) {
 	var bn types.Number
-	if bn, err = eval.GetNumber(sc, b); err != nil {
+	if bn, err = types.ToNumber(b); err != nil {
 		return
 	}
 
