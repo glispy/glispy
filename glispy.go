@@ -13,6 +13,7 @@ import (
 	"github.com/glispy/glispy/stdlib/core"
 	"github.com/glispy/glispy/stdlib/math"
 	"github.com/glispy/glispy/stdlib/net"
+	gstr "github.com/glispy/glispy/stdlib/strings"
 	"github.com/glispy/glispy/types"
 )
 
@@ -22,6 +23,7 @@ func New() (g Glispy) {
 	setFunc(s, "quote", core.Quote)
 	setFunc(s, "define", core.Define)
 	setFunc(s, "defun", core.Defun)
+	setFunc(s, "defmacro", g.setMacro)
 	setFunc(s, "begin", core.Begin)
 	setFunc(s, "method", core.Method)
 	setFunc(s, "println", core.Println)
@@ -33,11 +35,13 @@ func New() (g Glispy) {
 	setFunc(s, "make-hash-map", core.MakeHashMap)
 	setFunc(s, "get-value", core.GetValue)
 	setFunc(s, "set-value", core.SetValue)
+	setFunc(s, "remove-value", core.RemoveValue)
 	setFunc(s, "get-index-value", core.GetIndexValue)
 	setFunc(s, "set-index-value", core.SetIndexValue)
-	setFunc(s, "remove-value", core.RemoveValue)
+	setFunc(s, "split-string", gstr.Split)
+	setFunc(s, "split-string-n", gstr.SplitN)
 	setFunc(s, "set-macro-character", g.setReaderMacro)
-	setFunc(s, "defmacro", g.setMacro)
+	setFunc(s, "http-get", net.HTTPGetRequest)
 	setFunc(s, "http-get", net.HTTPGetRequest)
 	return NewWithScope(s)
 }
