@@ -1,6 +1,8 @@
 package expand
 
 import (
+	"fmt"
+
 	"github.com/glispy/glispy/common"
 	"github.com/glispy/glispy/scope"
 	"github.com/glispy/glispy/types"
@@ -35,7 +37,7 @@ func expandFunc(sc types.Scope, l types.List) (out types.Expression, err error) 
 	args = l[1:]
 
 	if ref, ok = sc.Get(sym); !ok {
-		return
+		return replaceValues(sc, l)
 	}
 
 	if list, ok = ref.(types.List); !ok {
@@ -62,12 +64,25 @@ func replaceValues(s types.Scope, body types.List) (out types.Expression, err er
 		ok   bool
 	)
 
+	fmt.Println("Replacing values")
 	for _, exp := range body {
 		switch n := exp.(type) {
 		case types.Symbol:
 			if exp, ok = s.Get(n); !ok {
 				exp = n
 			}
+
+			var funcList types.List
+			if funcList, ok = exp.(types.List); !ok {
+				list = append(list, exp)
+				continue
+			}
+
+			if exp, err = expandList(s, funcList); err != nil {
+				return
+			}
+
+			list = append(list, exp)
 
 		case types.List:
 			if exp, err = expandList(s, n); err != nil {
