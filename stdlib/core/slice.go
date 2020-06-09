@@ -23,25 +23,17 @@ func GetIndexValue(sc types.Scope, args types.List) (exp types.Expression, err e
 
 // SetIndexValue will set an index value within a slice
 func SetIndexValue(sc types.Scope, args types.List) (exp types.Expression, err error) {
-	var target types.Atom
-	if target, err = args.GetAtom(0); err != nil {
-		err = fmt.Errorf("error accessing first argument: %v", err)
+	var (
+		target types.Atom
+		index  types.Number
+		value  types.Atom
+	)
+
+	if err = args.GetValues(&target, &index, &value); err != nil {
 		return
 	}
 
-	var lKey types.String
-	if lKey, err = args.GetString(1); err != nil {
-		err = fmt.Errorf("error accessing second argument: %v", err)
-		return
-	}
-
-	var value types.Atom
-	if value, err = args.GetAtom(2); err != nil {
-		err = fmt.Errorf("error accessing third argument: %v", err)
-		return
-	}
-
-	return setValueToAtom(target, string(lKey), value)
+	return setIndexValue(target, int(index), value)
 }
 
 func getIndexValue(target types.Atom, index int) (exp types.Expression, err error) {
