@@ -36,6 +36,7 @@ func New() (g Glispy) {
 	setFunc(s, "get-value", core.GetValue)
 	setFunc(s, "set-value", core.SetValue)
 	setFunc(s, "remove-value", core.RemoveValue)
+	setFunc(s, "get-length", core.GetLength)
 	setFunc(s, "get-index-value", core.GetIndexValue)
 	setFunc(s, "set-index-value", core.SetIndexValue)
 	setFunc(s, "split-string", gstr.Split)
