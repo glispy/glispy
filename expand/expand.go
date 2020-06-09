@@ -1,6 +1,8 @@
 package expand
 
-import "github.com/glispy/glispy/types"
+import (
+	"github.com/glispy/glispy/types"
+)
 
 const (
 	ifSymbol = types.Symbol("if")

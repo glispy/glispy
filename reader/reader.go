@@ -323,13 +323,13 @@ var symbolRegExp = regexp.MustCompile(`[^a-zA-Z_<>+*-]`)
 type Token string
 
 func quote(r *Reader, char rune) (exp types.Expression, err error) {
-	var token Token
-	if token, err = r.ReadToken(); err != nil {
+	var parsed types.Expression
+	if parsed, err = r.Read(); err != nil {
 		return
 	}
 
 	var l types.List
-	l = append(l, types.Symbol("quote"), types.Symbol(token))
+	l = append(l, types.Symbol("quote"), parsed)
 	exp = l
 	return
 }

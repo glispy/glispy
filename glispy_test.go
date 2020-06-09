@@ -50,7 +50,7 @@ func TestGlispyDefine(t *testing.T) {
 
 	g := New()
 	src := `(
-	(define 'x 1337)
+	(define x 1337)
 	(println x)
 )`
 
@@ -127,7 +127,44 @@ func TestGetSetValue_struct(t *testing.T) {
 	fmt.Println("Value", val)
 }
 
-func TestGlispyMacro(t *testing.T) {
+func TestGetIndexValue(t *testing.T) {
+	var (
+		val types.Expression
+		err error
+	)
+
+	g := New()
+
+	if val, err = g.EvalString(`(
+		(define foo '(1 2 3))
+		(println (get-index-value foo 1))
+	)`); err != nil {
+		t.Fatal(err)
+	}
+
+	fmt.Println("Value", val)
+}
+
+func TestSetIndexValue(t *testing.T) {
+	var (
+		val types.Expression
+		err error
+	)
+
+	g := New()
+
+	if val, err = g.EvalString(`(
+		(define foo '(1 2 3))
+		(set-index-value foo 1 1337)
+		(println (get-index-value foo 1))
+	)`); err != nil {
+		t.Fatal(err)
+	}
+
+	fmt.Println("Value", val)
+}
+
+func TestGlispyMacro_println(t *testing.T) {
 	var err error
 	g := New()
 
@@ -158,12 +195,16 @@ func TestGlispyMacro_shrug(t *testing.T) {
 	var err error
 	g := New()
 
-	if _, err = g.EvalString(`(defmacro shrug () ("¯\_(ツ)_/¯"))`); err != nil {
+	if _, err = g.EvalString(`(
+	defmacro shrug (x) (
+		println x "¯\_(ツ)_/¯"
+	)
+)`); err != nil {
 		t.Fatal(err)
 	}
 
 	var compiled types.Expression
-	if compiled, err = g.CompileString(`(println shrug)`); err != nil {
+	if compiled, err = g.CompileString(`(shrug "Oh well")`); err != nil {
 		t.Fatal(err)
 	}
 
@@ -185,9 +226,23 @@ func TestHTTPGet(t *testing.T) {
 
 	g := New()
 	if val, err = g.EvalString(`(
-	(define 'resp (http-get nil "https://cat-fact.herokuapp.com/facts/random"))
+	(define resp (http-get nil "https://cat-fact.herokuapp.com/facts/random"))
 	(get-value resp "text")
 )`); err != nil {
+		t.Fatal(err)
+	}
+
+	fmt.Println("Value", val)
+}
+
+func TestEval_multi_quote(t *testing.T) {
+	var (
+		val types.Expression
+		err error
+	)
+
+	g := New()
+	if val, err = g.EvalString(`''''''(1 2 3)`); err != nil {
 		t.Fatal(err)
 	}
 

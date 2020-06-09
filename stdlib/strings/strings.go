@@ -1,6 +1,8 @@
 package strings
 
 import (
+	"strings"
+
 	"github.com/glispy/glispy/eval"
 	"github.com/glispy/glispy/types"
 )
@@ -49,5 +51,36 @@ func GreaterThan(sc types.Scope, as types.String, b types.Atom) (out types.Expre
 		out = "true"
 	}
 
+	return
+}
+
+// SplitN will split a string n times
+func SplitN(sc types.Scope, args types.List) (out types.Expression, err error) {
+	var (
+		str types.String
+		sep types.String
+		n   types.Number
+	)
+
+	if err = args.GetValues(&str, &sep, &n); err != nil {
+		return
+	}
+
+	out = strings.SplitN(string(str), string(sep), int(n))
+	return
+}
+
+// Split will split a string
+func Split(sc types.Scope, args types.List) (out types.Expression, err error) {
+	var (
+		str types.String
+		sep types.String
+	)
+
+	if err = args.GetValues(&str, &sep); err != nil {
+		return
+	}
+
+	out = strings.Split(string(str), string(sep))
 	return
 }
