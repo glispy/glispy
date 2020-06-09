@@ -86,7 +86,6 @@ func processList(sc types.Scope, l types.List) (out types.Expression, err error)
 	case ifSymbol:
 		test := l[1]
 		conseq := l[2]
-		alt := l[3]
 		if out, err = Eval(sc, test); err != nil {
 			return
 		}
@@ -95,6 +94,11 @@ func processList(sc types.Scope, l types.List) (out types.Expression, err error)
 			return Eval(sc, conseq)
 		}
 
+		if len(l) < 2 {
+			return
+		}
+
+		alt := l[3]
 		return Eval(sc, alt)
 
 	default:
