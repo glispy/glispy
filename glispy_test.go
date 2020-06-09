@@ -279,13 +279,23 @@ func TestIfStatement(t *testing.T) {
 	if val, err = g.EvalString(`(
 		(define foo '(1 2 3))
 		(define length (get-length foo))
-		(println length)
 		(if (> length 5) ("yes") ("no"))
 	)`); err != nil {
 		t.Fatal(err)
 	}
 
-	fmt.Println("Value", val)
+	var (
+		str types.String
+		ok  bool
+	)
+
+	if str, ok = val.(types.String); !ok {
+		t.Fatalf("invalid return type, expected %T and received %T", str, val)
+	}
+
+	if str != "no" {
+		t.Fatalf("invalid return value, expected %v and received %v", "no", str)
+	}
 }
 func BenchmarkGlispyAdd(b *testing.B) {
 	var (
