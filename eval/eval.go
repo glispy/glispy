@@ -103,13 +103,7 @@ func processList(sc types.Scope, l types.List) (out types.Expression, err error)
 }
 
 func handleFn(sc types.Scope, l types.List) (out types.Expression, err error) {
-	var (
-		ref  types.Expression
-		fn   types.Function
-		args types.List
-		ok   bool
-	)
-
+	var ref types.Expression
 	switch {
 	// We check to see if the symbol is define or defun. If either, we do not want to replace the values
 	case isSpecialOperator(l[0]):
@@ -125,13 +119,15 @@ func handleFn(sc types.Scope, l types.List) (out types.Expression, err error) {
 		ref = l[0]
 	}
 
-	if fn, ok = ref.(types.Function); !ok {
-		err = common.ErrExpectedFn
+	switch n := ref.(type) {
+	case types.Function:
+		args := l[1:]
+		return n(sc, args)
+
+	default:
+		out = n
 		return
 	}
-
-	args = l[1:]
-	return fn(sc, args)
 }
 
 func isSpecialOperator(symbol types.Atom) (ok bool) {

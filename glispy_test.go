@@ -249,6 +249,25 @@ func TestEval_multi_quote(t *testing.T) {
 	fmt.Println("Value", val)
 }
 
+func TestEndWithValue(t *testing.T) {
+	var (
+		val types.Expression
+		err error
+	)
+
+	g := New()
+
+	if val, err = g.EvalString(`(
+		(make-hash-map 'foo)
+		(set-value foo "bar" 1337)
+		foo
+	)`); err != nil {
+		t.Fatal(err)
+	}
+
+	fmt.Println("Value", val)
+}
+
 func BenchmarkGlispyAdd(b *testing.B) {
 	var (
 		val types.Expression
