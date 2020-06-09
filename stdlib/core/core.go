@@ -1,6 +1,8 @@
 package core
 
 import (
+	"fmt"
+
 	gmath "github.com/glispy/glispy/stdlib/math"
 	gstrings "github.com/glispy/glispy/stdlib/strings"
 
@@ -68,11 +70,12 @@ func LessThan(sc types.Scope, args types.List) (out types.Expression, err error)
 		return
 	}
 
-	if out, err = eval.Eval(sc, args[0]); err != nil {
+	var firstValue types.Atom
+	if firstValue, err = args.GetAtom(0); err != nil {
 		return
 	}
 
-	switch val := out.(type) {
+	switch val := firstValue.(type) {
 	case types.Number:
 		return gmath.LessThan(sc, val, args[1])
 
@@ -80,7 +83,7 @@ func LessThan(sc types.Scope, args types.List) (out types.Expression, err error)
 		return gstrings.LessThan(sc, val, args[1])
 
 	default:
-		err = common.ErrExpectedAtom
+		err = fmt.Errorf("invalid value, type of %T is not supported", firstValue)
 		return
 	}
 }
@@ -92,11 +95,12 @@ func GreaterThan(sc types.Scope, args types.List) (out types.Expression, err err
 		return
 	}
 
-	if out, err = eval.Eval(sc, args[0]); err != nil {
+	var firstValue types.Atom
+	if firstValue, err = args.GetAtom(0); err != nil {
 		return
 	}
 
-	switch val := out.(type) {
+	switch val := firstValue.(type) {
 	case types.Number:
 		return gmath.GreaterThan(sc, val, args[1])
 
@@ -104,7 +108,7 @@ func GreaterThan(sc types.Scope, args types.List) (out types.Expression, err err
 		return gstrings.GreaterThan(sc, val, args[1])
 
 	default:
-		err = common.ErrExpectedAtom
+		err = fmt.Errorf("invalid value, type of %T is not supported", firstValue)
 		return
 	}
 }
