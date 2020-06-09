@@ -277,7 +277,10 @@ func TestIfStatement(t *testing.T) {
 	g := New()
 
 	if val, err = g.EvalString(`(
-		(if (> 0 1) (println "no") (println "yes"))
+		(define foo '(1 2 3))
+		(define length (get-length foo))
+		(println length)
+		(if (> length 5) ("yes") ("no"))
 	)`); err != nil {
 		t.Fatal(err)
 	}
