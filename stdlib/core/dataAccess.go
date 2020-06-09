@@ -65,6 +65,55 @@ func RemoveValue(sc types.Scope, args types.List) (exp types.Expression, err err
 	return removeValueFromAtom(target, string(lKey))
 }
 
+// GetLength will get the length of a data structure
+func GetLength(sc types.Scope, args types.List) (exp types.Expression, err error) {
+	var (
+		target types.Atom
+	)
+
+	if err = args.GetValues(&target); err != nil {
+		return
+	}
+
+	switch n := target.(type) {
+	case types.List:
+		exp = types.Number(len(n))
+	case map[string]interface{}:
+		exp = types.Number(len(n))
+	case []string:
+		exp = types.Number(len(n))
+	case []int:
+		exp = types.Number(len(n))
+	case []int32:
+		exp = types.Number(len(n))
+	case []int64:
+		exp = types.Number(len(n))
+	case []uint:
+		exp = types.Number(len(n))
+	case []uint32:
+		exp = types.Number(len(n))
+	case []uint64:
+		exp = types.Number(len(n))
+	case []float32:
+		exp = types.Number(len(n))
+	case []float64:
+		exp = types.Number(len(n))
+	case []interface{}:
+		exp = types.Number(len(n))
+
+	default:
+		rval := reflect.ValueOf(target)
+		if kind := rval.Kind(); kind != reflect.Slice && kind != reflect.Map {
+			err = fmt.Errorf("error getting length: invalid type, %T is not supported", target)
+			return
+		}
+
+		exp = rval.Len()
+	}
+
+	return
+}
+
 func getValueFromAtom(target types.Atom, key string) (exp types.Expression, err error) {
 	var ok bool
 	switch v := target.(type) {
