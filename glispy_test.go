@@ -137,7 +137,26 @@ func TestGetIndexValue(t *testing.T) {
 
 	if val, err = g.EvalString(`(
 		(define foo '(1 2 3))
-		(println foo)
+		(println (get-index-value foo 1))
+	)`); err != nil {
+		t.Fatal(err)
+	}
+
+	fmt.Println("Value", val)
+}
+
+func TestSetIndexValue(t *testing.T) {
+	var (
+		val types.Expression
+		err error
+	)
+
+	g := New()
+
+	if val, err = g.EvalString(`(
+		(define foo '(1 2 3))
+		(set-index-value foo 1 1337)
+		(println (get-index-value foo 1))
 	)`); err != nil {
 		t.Fatal(err)
 	}
