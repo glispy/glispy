@@ -1,8 +1,6 @@
 package expand
 
 import (
-	"fmt"
-
 	"github.com/glispy/glispy/common"
 	"github.com/glispy/glispy/scope"
 	"github.com/glispy/glispy/types"
@@ -64,7 +62,6 @@ func replaceValues(s types.Scope, body types.List) (out types.Expression, err er
 		ok   bool
 	)
 
-	fmt.Println("Replacing values")
 	for _, exp := range body {
 		switch n := exp.(type) {
 		case types.Symbol:
