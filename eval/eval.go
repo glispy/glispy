@@ -113,11 +113,6 @@ func handleFn(sc types.Scope, l types.List) (out types.Expression, err error) {
 	switch {
 	// We check to see if the symbol is define or defun. If either, we do not want to replace the values
 	case isSpecialOperator(l[0]):
-		// // TODO: Ensure this isn't needed
-		// if l, err = replaceSymbols(sc, l, 200); err != nil {
-		//	return
-		// }
-
 		if ref, err = tryHandleSymbol(sc, l[0]); err != nil {
 			return
 		}
@@ -130,8 +125,6 @@ func handleFn(sc types.Scope, l types.List) (out types.Expression, err error) {
 		ref = l[0]
 	}
 
-	// TODO: Figure out how to stop lists from being processed after being quoted
-	fmt.Printf("REF? %+v / %T / %v\n", ref, ref, l[1:])
 	if fn, ok = ref.(types.Function); !ok {
 		err = common.ErrExpectedFn
 		return
@@ -143,6 +136,7 @@ func handleFn(sc types.Scope, l types.List) (out types.Expression, err error) {
 
 func isSpecialOperator(symbol types.Atom) (ok bool) {
 	switch symbol {
+	case types.Symbol("define"):
 	case types.Symbol("quote"):
 	case types.Symbol("defun"):
 	case types.Symbol("defmacro"):
