@@ -100,6 +100,24 @@ func TestGetSetValue_map(t *testing.T) {
 	fmt.Println("Value", val)
 }
 
+func TestGetValue_nil_map(t *testing.T) {
+	var (
+		val types.Expression
+		err error
+	)
+
+	g := New()
+	var m map[string]string
+	g.sc.Put("foo", m)
+	if val, err = g.EvalString(`(
+		(get-value foo "bar")
+	)`); err != nil {
+		t.Fatal(err)
+	}
+
+	fmt.Println("Value", val)
+}
+
 func TestGetSetValue_struct(t *testing.T) {
 	var (
 		val types.Expression
