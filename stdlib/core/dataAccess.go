@@ -208,7 +208,7 @@ func getReflectValueFromAtom(target types.Atom, key string) (exp types.Expressio
 		return
 	}
 
-	if rval.IsZero() {
+	if rval.Kind() == reflect.Invalid || rval.IsZero() {
 		return
 	}
 
