@@ -1,7 +1,7 @@
 package types
 
 import (
-	"github.com/Hatch1fy/errors"
+	"github.com/hatchify/errors"
 )
 
 // ErrInvalidSymbol is returned when a symbol is invalid

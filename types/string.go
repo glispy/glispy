@@ -1,7 +1,7 @@
 package types
 
 import (
-	"github.com/Hatch1fy/errors"
+	"github.com/hatchify/errors"
 )
 
 // ErrInvalidString is returned when a string is invalid

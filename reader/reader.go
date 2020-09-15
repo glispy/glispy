@@ -9,9 +9,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/Hatch1fy/errors"
 	"github.com/glispy/glispy/common"
 	"github.com/glispy/glispy/types"
+	"github.com/hatchify/errors"
 )
 
 // ErrInvalidAtom is returned when an atom is invalid

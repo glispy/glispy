@@ -1,6 +1,6 @@
 package types
 
-import "github.com/Hatch1fy/errors"
+import "github.com/hatchify/errors"
 
 // ErrInvalidNil is returned when a nil is invalid
 const ErrInvalidNil = errors.Error("invalid nil")

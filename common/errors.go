@@ -1,6 +1,6 @@
 package common
 
-import "github.com/Hatch1fy/errors"
+import "github.com/hatchify/errors"
 
 const (
 	// ErrUnexpectedEOF is returned when an end is encountered before it was expected

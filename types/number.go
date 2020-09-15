@@ -1,7 +1,7 @@
 package types
 
 import (
-	"github.com/Hatch1fy/errors"
+	"github.com/hatchify/errors"
 )
 
 // ErrInvalidNumber is returned when a number is invalid
