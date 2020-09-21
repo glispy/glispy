@@ -8,6 +8,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"unicode"
 
 	"github.com/glispy/glispy/common"
 	"github.com/glispy/glispy/types"
@@ -136,7 +137,7 @@ func (r *Reader) ReadNextNonWhitespaceChar() (char rune, err error) {
 			return
 		}
 
-		if !isWhitespace(char) {
+		if !unicode.IsSpace(char) {
 			return
 		}
 	}
@@ -155,7 +156,7 @@ func (r *Reader) ReadToken() (token Token, err error) {
 			token, ok = r.pushQuotes(char)
 		case isProtected(char):
 			token, ok = r.pushProtected(char)
-		case isWhitespace(char):
+		case unicode.IsSpace(char):
 			token, ok = r.pushWhitespace(char)
 
 		default:
