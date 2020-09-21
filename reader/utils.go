@@ -1,5 +1,7 @@
 package reader
 
+import "unicode"
+
 func isProtected(char rune) (ok bool) {
 	switch char {
 	case '(':
@@ -13,14 +15,5 @@ func isProtected(char rune) (ok bool) {
 }
 
 func isWhitespace(char rune) (ok bool) {
-	switch char {
-	case ' ':
-	case '\t':
-	case '\n':
-
-	default:
-		return false
-	}
-
-	return true
+	return unicode.IsSpace(char)
 }
